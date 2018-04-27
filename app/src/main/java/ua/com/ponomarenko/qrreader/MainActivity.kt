@@ -1,6 +1,7 @@
 package ua.com.ponomarenko.qrreader
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -12,10 +13,19 @@ import android.widget.Toast
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
+import android.provider.MediaStore
+import android.content.Intent
+import android.graphics.Bitmap
+import android.R.attr.data
+import android.support.v4.app.NotificationCompat.getExtras
+import kotlinx.android.synthetic.main.activity_main.*
+
 
 private const val PERMISSION_CODE = 101
 
 class MainActivity : AppCompatActivity() {
+
+    val REQUEST_IMAGE_CAPTURE = 102
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,20 +33,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         checkPermissions()
 
-        val myBitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.puppy)
+        dispatchTakePictureIntent()
 
-        val detector = BarcodeDetector.Builder(applicationContext).setBarcodeFormats(Barcode.DATA_MATRIX or Barcode.QR_CODE).build()
+//        val myBitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.puppy)
+//
+//        val detector = BarcodeDetector.Builder(applicationContext).setBarcodeFormats(Barcode.DATA_MATRIX or Barcode.QR_CODE).build()
+//
+//        if (!detector.isOperational) {
+//        }
 
-        if (!detector.isOperational) {
-        }
-
-        val frame = Frame.Builder().setBitmap(myBitmap).build()
-        val barcodes = detector.detect(frame)
-
-        val thisCode = barcodes.valueAt(0)
+//        val frame = Frame.Builder().setBitmap(myBitmap).build()
+//        val barcodes = detector.detect(frame)
+//
+//        val thisCode = barcodes.valueAt(0)
     }
+
+
 
     private fun checkPermissions() {
 
@@ -45,6 +61,13 @@ class MainActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), PERMISSION_CODE)
             }
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
@@ -57,6 +80,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 return
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val imageBitmap = data.extras.get("data") as Bitmap
+            imageView.setImageBitmap(imageBitmap)
         }
     }
 }
