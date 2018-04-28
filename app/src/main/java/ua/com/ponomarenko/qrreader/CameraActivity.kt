@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.View
 import com.google.android.gms.vision.CameraSource
+import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_camera.*
@@ -25,7 +26,20 @@ class CameraActivity : Activity() {
         checkPermissions()
 
         val barcodeDetector = BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build()
+        barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
+            override fun receiveDetections(barcodes: Detector.Detections<Barcode>?) {
+                val detectedItems = barcodes?.detectedItems
+                if (detectedItems != null) {
+                    val valueAt = detectedItems.valueAt(0)
+                }
+            }
+
+            override fun release() {}
+
+        })
+
         val cameraSource = CameraSource.Builder(this, barcodeDetector).setRequestedPreviewSize(640, 480).build()
+
 
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
