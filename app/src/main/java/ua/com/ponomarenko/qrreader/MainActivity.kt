@@ -2,24 +2,16 @@ package ua.com.ponomarenko.qrreader
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
-import com.google.android.gms.vision.Frame
-import com.google.android.gms.vision.barcode.Barcode
-import com.google.android.gms.vision.barcode.BarcodeDetector
-import android.provider.MediaStore
-import android.content.Intent
-import android.graphics.Bitmap
-import android.R.attr.data
-import android.support.v4.app.NotificationCompat.getExtras
-import kotlinx.android.synthetic.main.activity_main.*
-
+import android.view.Menu
 
 private const val PERMISSION_CODE = 101
 
@@ -27,13 +19,10 @@ class MainActivity : AppCompatActivity() {
 
     val REQUEST_IMAGE_CAPTURE = 102
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
 
         checkPermissions()
 
@@ -51,7 +40,6 @@ class MainActivity : AppCompatActivity() {
 //
 //        val thisCode = barcodes.valueAt(0)
     }
-
 
 
     private fun checkPermissions() {
@@ -86,7 +74,12 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data.extras.get("data") as Bitmap
-            imageView.setImageBitmap(imageBitmap)
+//            imageView.setImageBitmap(imageBitmap)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 }

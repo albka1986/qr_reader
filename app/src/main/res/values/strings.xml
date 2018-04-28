@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">QR Reader</string>
     <string name="error_not_found">Could not set up the detector!</string>
+    <string name="btn_browse">Browse website</string>
+    <string name="btn_copy">Copy</string>
+    <string name="btn_share">Share</string>
+    <string name="menu_share">Share the app</string>
+    <string name="menu_feedback">Send feedback</string>
+    <string name="main_title">Information from the code:</string>
 </resources>
