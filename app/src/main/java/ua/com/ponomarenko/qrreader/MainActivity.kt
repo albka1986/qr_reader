@@ -8,11 +8,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.util.Patterns
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.vision.barcode.Barcode
 import kotlinx.android.synthetic.main.activity_main.*
+import java.nio.file.Files.find
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -65,15 +67,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun openBrowsePressed() {
-        var url = Uri.parse(barcode.url.url)
-        if (TextUtils.isEmpty(url.toString())) {
-            url = Uri.parse(barcode.rawValue)
+        var url = barcode.url?.url
+
+        if (TextUtils.isEmpty(url)) {
+
+            val matcher = Patterns.WEB_URL.matcher(barcode.rawValue)
+            while (matcher.find()) {
+                val matchStart = matcher.start(1)
+                val matchEnd = matcher.end()
+                url = barcode.rawValue.substring(matchStart, matchEnd)
+            }
+
+            if (TextUtils.isEmpty(url)) {
+                Toast.makeText(this, getString(R.string.toast_url_not_found), Toast.LENGTH_SHORT).show()
+                return
+            }
         }
-        if (TextUtils.isEmpty(url.toString())) {
-            Toast.makeText(this, getString(R.string.toast_url_not_found), Toast.LENGTH_SHORT).show()
-            return
-        }
-        val browserIntent = Intent(Intent.ACTION_VIEW, url)
+
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(browserIntent)
     }
 
