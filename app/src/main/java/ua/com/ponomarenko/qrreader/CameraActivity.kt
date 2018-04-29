@@ -2,11 +2,13 @@ package ua.com.ponomarenko.qrreader
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.util.SparseArray
 import android.view.SurfaceHolder
 import android.view.View
 import com.google.android.gms.vision.CameraSource
@@ -15,10 +17,12 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_camera.*
 
-private const val PERMISSION_CODE = 101
-
 
 class CameraActivity : Activity() {
+
+    private val tag = this::class.qualifiedName
+    private val permissionCode = 101
+    private lateinit var cameraSource: CameraSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,23 +31,22 @@ class CameraActivity : Activity() {
 
         val barcodeDetector = BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build()
         barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
-            override fun receiveDetections(barcodes: Detector.Detections<Barcode>?) {
-                val detectedItems = barcodes?.detectedItems
-                if (detectedItems != null) {
-                    val valueAt = detectedItems.valueAt(0)
-                }
+            override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
+                onBarcodeDetected(detections)
             }
 
             override fun release() {}
 
         })
 
-        val cameraSource = CameraSource.Builder(this, barcodeDetector).setRequestedPreviewSize(640, 480).build()
-
+        cameraSource = CameraSource.Builder(this, barcodeDetector)
+                .setRequestedPreviewSize(640, 480)
+                .setAutoFocusEnabled(true)
+                .build()
 
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-                Log.d("debug", "surfaceChanged")
+                Log.d(tag, "surfaceChanged")
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -54,10 +57,23 @@ class CameraActivity : Activity() {
                 try {
                     cameraSource.start(surfaceView.holder)
                 } catch (e: SecurityException) {
-                    Log.e("CAMERA SOURCE", e.message)
+                    Log.e(tag, e.message)
                 }
             }
         })
+    }
+
+    private fun onBarcodeDetected(detections: Detector.Detections<Barcode>?) {
+        val barcodes: SparseArray<Barcode> = detections!!.detectedItems
+        if (barcodes.size() != 0) {
+
+            val intent = Intent(this@CameraActivity, MainActivity::class.java)
+            intent.putExtra("barcodeInstance", barcodes.valueAt(0))
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+
+            Log.d(tag, barcodes.valueAt(0).rawValue)
+        }
     }
 
     private fun runCamera() {
@@ -69,7 +85,7 @@ class CameraActivity : Activity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(arrayOf(Manifest.permission.CAMERA), PERMISSION_CODE)
+                requestPermissions(arrayOf(Manifest.permission.CAMERA), permissionCode)
             } else {
                 runCamera()
             }
@@ -78,10 +94,9 @@ class CameraActivity : Activity() {
         }
     }
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            PERMISSION_CODE -> {
+            permissionCode -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     runCamera()
                 } else {
