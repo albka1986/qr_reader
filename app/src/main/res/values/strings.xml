@@ -7,4 +7,6 @@
     <string name="menu_share">Share the app</string>
     <string name="menu_feedback">Send feedback</string>
     <string name="main_title">Information from the code:</string>
+    <string name="toast_data_copied">Copied to clipboard</string>
+    <string name="toast_url_not_found">No URL was found</string>
 </resources>

@@ -49,14 +49,17 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/browse_btn"
             style="@style/CustomButton"
             android:text="@string/btn_browse" />
 
         <Button
+            android:id="@+id/copy_btn"
             style="@style/CustomButton"
             android:text="@string/btn_copy" />
 
         <Button
+            android:id="@+id/share_btn"
             style="@style/CustomButton"
             android:text="@string/btn_share" />
 
