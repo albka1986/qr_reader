@@ -46,7 +46,6 @@ class CameraActivity : Activity() {
 
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-                Log.d(tag, "surfaceChanged")
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -69,7 +68,6 @@ class CameraActivity : Activity() {
 
             val intent = Intent(this@CameraActivity, MainActivity::class.java)
             intent.putExtra("barcodeInstance", barcodes.valueAt(0))
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
 
             Log.d(tag, barcodes.valueAt(0).rawValue)

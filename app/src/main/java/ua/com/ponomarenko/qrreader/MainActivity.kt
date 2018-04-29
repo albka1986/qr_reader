@@ -13,7 +13,6 @@ class MainActivity : AppCompatActivity() {
     private val tag = this::class.qualifiedName
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(tag, "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val barcode: Barcode = intent.extras.getParcelable("barcodeInstance")
