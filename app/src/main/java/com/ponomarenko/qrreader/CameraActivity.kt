@@ -1,4 +1,4 @@
-package ua.com.ponomarenko.qrreader
+package com.ponomarenko.qrreader
 
 import android.Manifest
 import android.app.Activity
@@ -16,6 +16,7 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_camera.*
+import com.ponomarenko.qrreader.R
 
 
 class CameraActivity : Activity() {

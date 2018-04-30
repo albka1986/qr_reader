@@ -9,4 +9,9 @@
     <string name="main_title">Information from the code:</string>
     <string name="toast_data_copied">Copied to clipboard</string>
     <string name="toast_url_not_found">No URL was found</string>
+    <string name="feedback_email">mailto: albka1986@gmail.com</string>
+    <string name="feedback_decription">Send message to admin via:</string>
+    <string name="play_store_url">https://play.google.com/store/apps/details?id=</string>
+    <string name="share_app_title">Share</string>
+    <string name="intent_type">text/plain</string>
 </resources>

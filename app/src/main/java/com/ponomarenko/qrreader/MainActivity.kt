@@ -1,4 +1,4 @@
-package ua.com.ponomarenko.qrreader
+package com.ponomarenko.qrreader
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -10,14 +10,16 @@ import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Patterns
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.vision.barcode.Barcode
 import kotlinx.android.synthetic.main.activity_main.*
-import java.nio.file.Files.find
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    private val mailRequest = 1110
 
     private lateinit var barcode: Barcode
 
@@ -26,12 +28,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
         barcode = intent.extras.getParcelable("barcodeInstance")
         content_tv.text = barcode.displayValue
-
         browse_btn.setOnClickListener(this)
         copy_btn.setOnClickListener(this)
         share_btn.setOnClickListener(this)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, barcode.rawValue)
-        sendIntent.type = "text/plain"
+        sendIntent.type =  getString(R.string.intent_type)
         startActivity(sendIntent)
     }
 
@@ -88,5 +87,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(browserIntent)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menu_share_app -> shareApp()
+            R.id.menu_send_feedback -> sendFeedback()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
+    private fun sendFeedback() {
+        val intent = Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.feedback_email)))
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.feedback_decription)), mailRequest)
+    }
+
+    private fun shareApp() {
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND
+        intent.type = getString(R.string.intent_type)
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.play_store_url) + packageName)
+        startActivity(Intent.createChooser(intent, getString(R.string.share_app_title)))
+    }
 }

@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "ua.com.ponomarenko.qrreader"
+        applicationId "com.ponomarenko.qrreader"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
