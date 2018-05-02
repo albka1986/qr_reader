@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Patterns
@@ -14,10 +15,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.vision.barcode.Barcode
-import kotlinx.android.synthetic.main.activity_main.*
+import com.ponomarenko.qrreader.fragments.ContactFragment
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    override fun onClick(v: View?) {
+    }
 
     private val mailRequest = 1110
 
@@ -27,10 +31,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         barcode = intent.extras.getParcelable("barcodeInstance")
-        content_tv.text = barcode.displayValue
-        browse_btn.setOnClickListener(this)
-        copy_btn.setOnClickListener(this)
-        share_btn.setOnClickListener(this)
+        launchFragment(R.id.static_fragment, ContactFragment())
+    }
+
+    private fun launchFragment(idContainer: Int, frag: Fragment){
+        supportFragmentManager.beginTransaction()
+                .add(idContainer, frag)
+                .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -42,19 +49,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         finish()
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.browse_btn -> openBrowsePressed()
-            R.id.copy_btn -> copyPressed()
-            R.id.share_btn -> sharePressed()
-        }
-    }
-
     private fun sharePressed() {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, barcode.rawValue)
-        sendIntent.type =  getString(R.string.intent_type)
+        sendIntent.type = getString(R.string.intent_type)
         startActivity(sendIntent)
     }
 
