@@ -15,8 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.vision.barcode.Barcode
-import com.ponomarenko.qrreader.fragments.ContactFragment
-
+import com.ponomarenko.qrreader.fragments.contact.ContactFragment
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -34,7 +33,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         launchFragment(R.id.static_fragment, ContactFragment())
     }
 
-    private fun launchFragment(idContainer: Int, frag: Fragment){
+    private fun launchFragment(idContainer: Int, frag: Fragment) {
         supportFragmentManager.beginTransaction()
                 .add(idContainer, frag)
                 .commit()

@@ -1,4 +1,4 @@
-package com.ponomarenko.qrreader.fragments
+package com.ponomarenko.qrreader.fragments.contact
 
 /**
  * Created by Ponomarenko Oleh on 5/31/2018.

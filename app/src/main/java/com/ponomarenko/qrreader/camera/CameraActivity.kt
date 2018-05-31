@@ -1,4 +1,4 @@
-package com.ponomarenko.qrreader
+package com.ponomarenko.qrreader.camera
 
 import android.Manifest
 import android.app.Activity
@@ -15,9 +15,9 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import kotlinx.android.synthetic.main.activity_camera.*
+import com.ponomarenko.qrreader.MainActivity
 import com.ponomarenko.qrreader.R
-
+import kotlinx.android.synthetic.main.activity_camera.*
 
 class CameraActivity : Activity() {
 
@@ -64,14 +64,14 @@ class CameraActivity : Activity() {
     }
 
     private fun onBarcodeDetected(detections: Detector.Detections<Barcode>?) {
-        val barcodes: SparseArray<Barcode> = detections!!.detectedItems
-        if (barcodes.size() != 0) {
+        val barcodeList: SparseArray<Barcode> = detections!!.detectedItems
+        if (barcodeList.size() != 0) {
 
             val intent = Intent(this@CameraActivity, MainActivity::class.java)
-            intent.putExtra("barcodeInstance", barcodes.valueAt(0))
+            intent.putExtra("barcodeInstance", barcodeList.valueAt(0))
             startActivity(intent)
 
-            Log.d(tag, barcodes.valueAt(0).rawValue)
+            Log.d(tag, barcodeList.valueAt(0).rawValue)
         }
     }
 

@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.ponomarenko.qrreader.CameraActivity"
+            android:name="com.ponomarenko.qrreader.camera.CameraActivity"
             android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
