@@ -1,4 +1,4 @@
-package com.ponomarenko.qrreader.fragments.contact
+package com.ponomarenko.qrreader.details.fragments.contact
 
 /**
  * Created by Ponomarenko Oleh on 5/31/2018.
@@ -6,4 +6,5 @@ package com.ponomarenko.qrreader.fragments.contact
 interface ContactPresenter{
     fun  onCallPressed()
     fun bind(contactView: ContactView)
+    fun unbind()
 }

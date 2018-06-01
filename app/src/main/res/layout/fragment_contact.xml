@@ -15,12 +15,6 @@
         android:paddingStart="16dp"
         android:paddingTop="8dp">
 
-        <ImageView
-            android:id="@+id/header_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/contact" />
 
         <TextView
             android:id="@+id/header_title"
