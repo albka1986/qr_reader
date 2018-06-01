@@ -35,28 +35,33 @@
 
     </LinearLayout>
 
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0.4"
         android:background="@android:color/white" />
 
-    <ScrollView
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="1dp"
+        android:alpha="0.4"
+        android:background="@android:color/white" />
 
-        <TextView
-            android:id="@+id/contact_detail_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_detail_info_container"
-            android:lineSpacingExtra="6dp"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/detailed_info_text_size"
-            android:typeface="monospace"
-            tools:text="Test" />
-
-    </ScrollView>
+    <TextView
+        android:id="@+id/contact_detail_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_detail_info_container"
+        android:lineSpacingExtra="6dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/detailed_info_text_size"
+        android:typeface="monospace"
+        tools:text="Test" />
 
 
 </LinearLayout>

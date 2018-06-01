@@ -29,7 +29,7 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
         barcode.phone != null -> BarcodeType.PHONE
         barcode.url != null -> BarcodeType.URL
         barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
-        barcode.wifi != null -> BarcodeType.WIFI
+        barcode.ic_wifi != null -> BarcodeType.WIFI
         barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
         barcode.geoPoint != null -> BarcodeType.GEO_POINT*/
 
