@@ -14,5 +14,6 @@
     <string name="play_store_url">https://play.google.com/store/apps/details?id=</string>
     <string name="share_app_title">Share</string>
     <string name="intent_type">text/plain</string>
-    <string name="contact_fragment_title">Contact</string>
+    <string name="fragment_title_contact">Contact</string>
+    <string name="fragment_title_url">Web-site</string>
 </resources>

@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
 import com.ponomarenko.qrreader.camera.CameraActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_display_info.*
 
 class DisplayInfoActivity : AppCompatActivity(), DisplayInfoView {
 
@@ -18,7 +18,7 @@ class DisplayInfoActivity : AppCompatActivity(), DisplayInfoView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_display_info)
         barcode = intent.extras.getParcelable(CameraActivity.BARCODE_KEY)
         displayInfoPresenter.bind(this)
         displayInfoPresenter.detectFragment(barcode)
