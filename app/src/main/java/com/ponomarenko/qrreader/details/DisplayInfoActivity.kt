@@ -30,7 +30,7 @@ class DisplayInfoActivity : AppCompatActivity(), DisplayInfoView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        barcode = intent.extras.getParcelable("barcodeInstance")
+        barcode = intent.extras.getParcelable(CameraActivity.BARCODE_KEY)
         displayInfoPresenter.bind(this)
         displayInfoPresenter.detectFragment(barcode)
         take_new_qr_btn.setOnClickListener { takeNewQR() }

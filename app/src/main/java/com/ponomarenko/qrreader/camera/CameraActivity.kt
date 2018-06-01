@@ -15,11 +15,15 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import com.ponomarenko.qrreader.details.DisplayInfoActivity
 import com.ponomarenko.qrreader.R
+import com.ponomarenko.qrreader.details.DisplayInfoActivity
 import kotlinx.android.synthetic.main.activity_camera.*
 
 class CameraActivity : Activity() {
+
+    companion object {
+        const val BARCODE_KEY: String = "barcodeIntentKey"
+    }
 
     private val tag = this::class.qualifiedName
     private val permissionCode = 101
@@ -41,7 +45,6 @@ class CameraActivity : Activity() {
         })
 
         cameraSource = CameraSource.Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(640, 480)
                 .setAutoFocusEnabled(true)
                 .build()
 
@@ -68,7 +71,7 @@ class CameraActivity : Activity() {
         if (barcodeList.size() != 0) {
 
             val intent = Intent(this@CameraActivity, DisplayInfoActivity::class.java)
-            intent.putExtra("barcodeInstance", barcodeList.valueAt(0))
+            intent.putExtra(BARCODE_KEY, barcodeList.valueAt(0))
             startActivity(intent)
 
             Log.d(tag, barcodeList.valueAt(0).rawValue)

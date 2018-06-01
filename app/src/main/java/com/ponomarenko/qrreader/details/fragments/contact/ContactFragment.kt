@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
+import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
+import kotlinx.android.synthetic.main.fragment_contact.*
 
 /**
  * Created by Ponomarenko Oleh on 5/2/2018.
@@ -13,8 +16,8 @@ import com.ponomarenko.qrreader.R
 
 class ContactFragment : Fragment(), ContactView {
 
-    override fun startCall() {
-
+    override fun setData(detailedInfoText: String) {
+        contact_detail_tv.text = detailedInfoText
     }
 
     private val contactPresenter: ContactPresenter by lazy { ContactPresentImpl() }
@@ -28,4 +31,11 @@ class ContactFragment : Fragment(), ContactView {
         return inflater.inflate(R.layout.fragment_contact, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
+        if (barcode != null) {
+            contactPresenter.setData(barcode)
+        }
+    }
 }

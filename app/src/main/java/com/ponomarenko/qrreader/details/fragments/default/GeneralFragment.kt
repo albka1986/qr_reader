@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ponomarenko.qrreader.R
+import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
 import kotlinx.android.synthetic.main.fragment_general.*
 
 /**
@@ -17,7 +18,6 @@ class GeneralFragment : Fragment(), GeneralView {
 
     override fun setData(text: String) {
         raw_value_tv.text = text
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +31,7 @@ class GeneralFragment : Fragment(), GeneralView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val rawData = arguments?.getString("rawData")
+        val rawData = arguments?.getString(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
         if (rawData != null) {
             generalPresenter.setData(rawData)
         }

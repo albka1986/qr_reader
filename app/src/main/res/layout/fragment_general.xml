@@ -5,16 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <TextView
         android:id="@+id/raw_value_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:textSize="26sp"
+        android:layout_margin="@dimen/margin_detail_info_container"
+        android:lineSpacingExtra="6dp"
+        android:textSize="@dimen/detailed_info_text_size"
         android:textStyle="bold"
-        tools:text="Contact" />
-
+        android:typeface="monospace"
+        tools:text="Contact \nTest" />
 
 </LinearLayout>
