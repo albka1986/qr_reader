@@ -1,4 +1,4 @@
-package com.ponomarenko.qrreader.details.fragments.contact
+package com.ponomarenko.qrreader.details.fragments.url
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,28 +14,28 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
  * Created by Ponomarenko Oleh on 5/2/2018.
  */
 
-class ContactFragment : Fragment(), ContactView {
+class UrlFragment : Fragment(), UrlView {
 
     override fun setData(detailedInfoText: String) {
         detail_info_container_tv.text = detailedInfoText
     }
 
-    private val contactPresenter: ContactPresenter by lazy { ContactPresentImpl() }
+    private val urlPresenter: UrlPresenter by lazy { UrlPresenterImpl() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        contactPresenter.bind(this)
+        urlPresenter.bind(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_contact, container, false)
+        return inflater.inflate(R.layout.fragment_url, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
         if (barcode != null) {
-            contactPresenter.setData(barcode)
+            urlPresenter.setData(barcode)
         }
     }
 }

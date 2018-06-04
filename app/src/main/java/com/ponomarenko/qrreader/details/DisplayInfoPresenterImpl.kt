@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.details.fragments.contact.ContactFragment
 import com.ponomarenko.qrreader.details.fragments.default.GeneralFragment
+import com.ponomarenko.qrreader.details.fragments.url.UrlFragment
 import org.jetbrains.annotations.NotNull
 
 /**
@@ -25,9 +26,10 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
     override fun detectFragment(@NotNull barcode: Barcode?) {
         when {
             barcode!!.contactInfo != null -> launchContactFragment(barcode)
+            barcode.url != null -> launchUrlFragment(barcode)
+
         /*barcode.email != null -> BarcodeType.EMAIL
         barcode.phone != null -> BarcodeType.PHONE
-        barcode.url != null -> BarcodeType.URL
         barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
         barcode.ic_wifi != null -> BarcodeType.WIFI
         barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
@@ -37,6 +39,14 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
                 launchGeneralFragment(barcode)
             }
         }
+    }
+
+    private fun launchUrlFragment(barcode: Barcode) {
+        val urlFragment = UrlFragment()
+        val args = Bundle()
+        args.putParcelable(ARGUMENT_DATA_KEY, barcode)
+        urlFragment.arguments = args
+        displayInfoView.launchFragment(urlFragment)
     }
 
     private fun launchContactFragment(barcode: Barcode?) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#414141"
@@ -27,22 +26,6 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:alpha="0.4"
-        android:background="@android:color/white" />
-
-    <TextView
-        android:id="@+id/contact_detail_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_detail_info_container"
-        android:lineSpacingExtra="6dp"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/detailed_info_text_size"
-        android:typeface="monospace"
-        tools:text="Test" />
-
+    <include layout="@layout/detail_container_ll" />
 
 </LinearLayout>
