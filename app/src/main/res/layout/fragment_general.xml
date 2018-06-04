@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/cat_button_ll" />
+
+
     <TextView
         android:id="@+id/raw_value_tv"
         android:layout_width="wrap_content"

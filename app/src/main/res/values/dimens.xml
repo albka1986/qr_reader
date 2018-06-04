@@ -3,4 +3,5 @@
     <dimen name="margin_detail_info_container">16dp</dimen>
     <dimen name="detailed_info_text_size">18sp</dimen>
     <dimen name="fragment_header_height">60dp</dimen>
+    <dimen name="cat_buttons_margin">8dp</dimen>
 </resources>

@@ -26,6 +26,9 @@
 
     </LinearLayout>
 
+    <include layout="@layout/cat_button_ll" />
+
+
     <include layout="@layout/detail_container_ll" />
 
 </LinearLayout>

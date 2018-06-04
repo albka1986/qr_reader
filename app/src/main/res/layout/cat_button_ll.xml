@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#414141"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.4"
+        android:background="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            style="@style/ButtonCatStyle"
+            android:src="@drawable/ic_call" />
+
+        <ImageButton
+            style="@style/ButtonCatStyle"
+            android:src="@drawable/ic_add_contact" />
+
+        <ImageButton
+            style="@style/ButtonCatStyle"
+            android:src="@drawable/ic_map" />
+
+        <ImageButton
+            style="@style/ButtonCatStyle"
+            android:src="@drawable/ic_mail" />
+
+        <ImageButton
+            style="@style/ButtonCatStyle"
+            android:src="@drawable/ic_browser" />
+
+        <ImageButton
+            style="@style/ButtonCatStyle"
+            android:src="@drawable/ic_share" />
+
+    </LinearLayout>
+
+</LinearLayout>
