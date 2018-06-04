@@ -1,5 +1,10 @@
 package com.ponomarenko.qrreader.details.fragments.contact
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +19,29 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
  * Created by Ponomarenko Oleh on 5/2/2018.
  */
 
-class ContactFragment : Fragment(), ContactView {
+class ContactFragment : Fragment(), ContactView, View.OnClickListener {
+
+    private var barcode: Barcode? = null
+
+
+    override fun getViewActivity(): Activity? {
+        return this.activity
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun initCall(phone: String) {
+        val intent = Intent(Intent.ACTION_CALL)
+        intent.data = Uri.parse("tel:".plus(phone))
+        context?.startActivity(intent)
+    }
+
+
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.call_btn -> contactPresenter.onCallPressed(barcode?.contactInfo)
+        }
+    }
 
     override fun setData(detailedInfoText: String) {
         detail_info_container_tv.text = detailedInfoText
@@ -33,9 +60,18 @@ class ContactFragment : Fragment(), ContactView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
+        barcode = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
         if (barcode != null) {
-            contactPresenter.setData(barcode)
+            contactPresenter.setData(barcode!!)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 666) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                contactPresenter.onCallPressed(barcode?.contactInfo)
+            }
         }
     }
 }

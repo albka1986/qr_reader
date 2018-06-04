@@ -1,15 +1,31 @@
 package com.ponomarenko.qrreader.details.fragments.contact
 
+import android.Manifest
+import android.os.Build
 import com.google.android.gms.vision.barcode.Barcode
 
 /**
  * Created by Ponomarenko Oleh on 5/31/2018.
  */
+
 class ContactPresentImpl : ContactPresenter {
 
+    override fun requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            contactView.getViewActivity()?.requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), 666)
+        }
+    }
+
+    override fun onCallPressed(contactInfo: Barcode.ContactInfo?) {
+        requestPermissions()
+        if (contactInfo?.phones == null || contactInfo.phones[0] == null) {
+            return
+        }
+        val phoneNumber = contactInfo.phones[0].number
+        contactView.initCall(phoneNumber)
+    }
 
     private lateinit var contactView: ContactView
-
 
     override fun bind(contactView: ContactView) {
         this.contactView = contactView

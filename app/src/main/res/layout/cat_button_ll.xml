@@ -18,26 +18,32 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/call_btn"
             style="@style/ButtonCatStyle"
             android:src="@drawable/ic_call" />
 
         <ImageButton
+            android:id="@+id/add_contact_btn"
             style="@style/ButtonCatStyle"
             android:src="@drawable/ic_add_contact" />
 
         <ImageButton
+            android:id="@+id/map_btn"
             style="@style/ButtonCatStyle"
             android:src="@drawable/ic_map" />
 
         <ImageButton
+            android:id="@+id/mail_btn"
             style="@style/ButtonCatStyle"
             android:src="@drawable/ic_mail" />
 
         <ImageButton
+            android:id="@+id/browser_btn"
             style="@style/ButtonCatStyle"
             android:src="@drawable/ic_browser" />
 
         <ImageButton
+            android:id="@+id/share_btn"
             style="@style/ButtonCatStyle"
             android:src="@drawable/ic_share" />
 
