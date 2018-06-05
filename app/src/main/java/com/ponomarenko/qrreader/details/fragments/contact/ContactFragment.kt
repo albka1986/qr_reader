@@ -1,7 +1,6 @@
 package com.ponomarenko.qrreader.details.fragments.contact
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
+import kotlinx.android.synthetic.main.cat_button_ll.*
 import kotlinx.android.synthetic.main.detail_container_ll.*
 
 /**
@@ -23,9 +23,8 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
 
     private var barcode: Barcode? = null
 
-
-    override fun getViewActivity(): Activity? {
-        return this.activity
+    override fun getViewFragment(): Fragment? {
+        return this
     }
 
     @SuppressLint("MissingPermission")
@@ -35,15 +34,15 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         context?.startActivity(intent)
     }
 
-
-
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.call_btn -> contactPresenter.onCallPressed(barcode?.contactInfo)
+            R.id.call_btn -> contactPresenter.checkPermission(barcode?.contactInfo)
         }
     }
 
     override fun setData(detailedInfoText: String) {
+        call_btn.visibility = View.VISIBLE //TODO FIX ME
+        call_btn.setOnClickListener(this)
         detail_info_container_tv.text = detailedInfoText
     }
 
@@ -68,9 +67,9 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 666) {
+        if (requestCode == ContactPresentImpl.CHECK_PERMISSION_CALL_REQUEST) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                contactPresenter.onCallPressed(barcode?.contactInfo)
+                contactPresenter.prepareCall(barcode?.contactInfo)
             }
         }
     }

@@ -1,12 +1,12 @@
 package com.ponomarenko.qrreader.details.fragments.contact
 
-import android.app.Activity
+import android.support.v4.app.Fragment
 
 interface ContactView {
 
     fun setData(detailedInfoText: String)
     fun initCall(phone: String)
-    fun getViewActivity(): Activity?
+    fun getViewFragment(): Fragment?
 
 
 }

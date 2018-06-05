@@ -1,7 +1,9 @@
 package com.ponomarenko.qrreader.details.fragments.contact
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Build
+import android.support.annotation.RequiresApi
 import com.google.android.gms.vision.barcode.Barcode
 
 /**
@@ -10,22 +12,36 @@ import com.google.android.gms.vision.barcode.Barcode
 
 class ContactPresentImpl : ContactPresenter {
 
-    override fun requestPermissions() {
+    companion object {
+        const val CHECK_PERMISSION_CALL_REQUEST: Int= 201
+    }
+
+    private lateinit var contactView: ContactView
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun requestPermissions(contactInfo: Barcode.ContactInfo?) {
+        contactView.getViewFragment()?.requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
+    }
+
+    override fun checkPermission(contactInfo: Barcode.ContactInfo?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            contactView.getViewActivity()?.requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), 666)
+            if (contactView.getViewFragment()?.activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                prepareCall(contactInfo)
+            } else {
+                requestPermissions(contactInfo)
+            }
+        } else {
+            prepareCall(contactInfo)
         }
     }
 
-    override fun onCallPressed(contactInfo: Barcode.ContactInfo?) {
-        requestPermissions()
+    override fun prepareCall(contactInfo: Barcode.ContactInfo?) {
         if (contactInfo?.phones == null || contactInfo.phones[0] == null) {
             return
         }
         val phoneNumber = contactInfo.phones[0].number
         contactView.initCall(phoneNumber)
     }
-
-    private lateinit var contactView: ContactView
 
     override fun bind(contactView: ContactView) {
         this.contactView = contactView
