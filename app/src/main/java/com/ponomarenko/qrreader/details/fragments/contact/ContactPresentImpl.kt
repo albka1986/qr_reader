@@ -6,14 +6,16 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import com.google.android.gms.vision.barcode.Barcode
 
+
 /**
  * Created by Ponomarenko Oleh on 5/31/2018.
  */
 
 class ContactPresentImpl : ContactPresenter {
 
+
     companion object {
-        const val CHECK_PERMISSION_CALL_REQUEST: Int= 201
+        const val CHECK_PERMISSION_CALL_REQUEST: Int = 201
     }
 
     private lateinit var contactView: ContactView
@@ -23,7 +25,7 @@ class ContactPresentImpl : ContactPresenter {
         contactView.getViewFragment()?.requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
     }
 
-    override fun checkPermission(contactInfo: Barcode.ContactInfo?) {
+    override fun onCallBtnPressed(contactInfo: Barcode.ContactInfo?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (contactView.getViewFragment()?.activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                 prepareCall(contactInfo)
@@ -51,39 +53,80 @@ class ContactPresentImpl : ContactPresenter {
         TODO("not implemented unbind")
     }
 
-    override fun setData(barcode: Barcode) {
+    override fun updateUI(barcode: Barcode) {
         val text = parseContactInfo(barcode)
         contactView.setData(text)
     }
 
     private fun parseContactInfo(barcode: Barcode): String {
 
+        val text = StringBuilder()
+
         val name = barcode.contactInfo.name.formattedName
+        if (name.isNotEmpty()) {
+            text.append(name).append("\n")
+        }
 
         val title = barcode.contactInfo.title
+        if (title.isNotEmpty()) {
+            text.append(title).append("\n")
+        }
 
         val organization = barcode.contactInfo.organization
+        if (organization.isNotEmpty()) {
+            text.append(organization).append("\n")
+        }
 
         val phones = StringBuilder()
         barcode.contactInfo.phones.iterator().forEach { phone -> phones.append(phone?.number).append("\n") }
+        contactView.setCallBtnVisible(phones.isNotEmpty())
+        contactView.setAddContactBtnVisible(phones.isNotEmpty())
+        if (phones.isNotEmpty()) {
+            text.append(phones)
+        }
 
         val emails = StringBuilder()
         barcode.contactInfo.emails.iterator().forEach { email -> emails.append(email?.address).append("\n") }
+        contactView.setEmailBtnVisible(emails.isNotEmpty())
+        if (emails.isNotEmpty()) {
+            text.append(emails)
+        }
 
         val addresses = StringBuilder()
         barcode.contactInfo.addresses.iterator().forEach { address -> address?.addressLines?.iterator()?.forEach { addressLine -> addresses.append(addressLine).append("\n") } }
+        contactView.setMapBtnVisible(addresses.isNotEmpty())
+        if (addresses.isNotEmpty()) {
+            text.append(addresses)
+        }
 
         val urls = StringBuilder()
         barcode.contactInfo.urls.iterator().forEach { url -> urls.append(url).append("\n") }
+        contactView.setBrowserBtnVisible(urls.isNotEmpty())
+        if (urls.isNotEmpty()) {
+            text.append(urls)
+        }
 
-        val text = StringBuilder()
-        text.append(name).append("\n")
-        text.append(title).append("\n")
-        text.append(organization).append("\n")
-        text.append(phones)
-        text.append(emails)
-        text.append(addresses)
-        text.append(urls)
         return text.toString()
+    }
+
+    override fun onBrowserBtnPressed(contactInfo: Barcode.ContactInfo?) {
+        TODO("not implemented - onBrowserBtnPressed")
+    }
+
+    override fun onAddContactBtnPressed(contactInfo: Barcode.ContactInfo?) {
+        TODO("not implemented - onAddContactBtnPressed")
+    }
+
+    override fun onMapBtnPressed(contactInfo: Barcode.ContactInfo?) {
+        TODO("not implemented - onMapBtnPressed")
+    }
+
+    override fun onEmailBtnPressed(contactInfo: Barcode.ContactInfo?) {
+     //TODO remove this method
+    }
+
+    override fun onShareBtnPressed(barcode: Barcode?) {
+        val text = barcode?.displayValue
+        contactView.shareContent(text)
     }
 }

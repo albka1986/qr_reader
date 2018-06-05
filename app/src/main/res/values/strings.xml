@@ -16,4 +16,6 @@
     <string name="intent_type">text/plain</string>
     <string name="fragment_title_contact">Contact</string>
     <string name="fragment_title_url">Web-site</string>
+    <string name="share_title">Send via</string>
+    <string name="share_type">text/plain</string>
 </resources>
