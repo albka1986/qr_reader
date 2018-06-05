@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -153,6 +154,18 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
     override fun openGoogleMaps(uri: Uri) {
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
+    }
+
+    override fun addContact(contactInfo: Barcode.ContactInfo) {
+        val intent = Intent(Intent.ACTION_INSERT)
+        intent.type = ContactsContract.Contacts.CONTENT_TYPE
+
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, contactInfo.name?.formattedName)
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, contactInfo.phones?.first()?.number)
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, contactInfo.emails?.first()?.address)
+
+        startActivity(intent)
+
     }
 
 }
