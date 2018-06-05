@@ -15,6 +15,5 @@ interface ContactPresenter {
     fun onBrowserBtnPressed(contactInfo: Barcode.ContactInfo?)
     fun onAddContactBtnPressed(contactInfo: Barcode.ContactInfo?)
     fun onMapBtnPressed(contactInfo: Barcode.ContactInfo?)
-    fun onEmailBtnPressed(contactInfo: Barcode.ContactInfo?)
     fun onShareBtnPressed(barcode: Barcode?)
 }

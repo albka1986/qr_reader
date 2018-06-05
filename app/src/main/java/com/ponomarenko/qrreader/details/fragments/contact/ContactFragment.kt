@@ -15,12 +15,15 @@ import com.ponomarenko.qrreader.R
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
 import kotlinx.android.synthetic.main.cat_button_ll.*
 import kotlinx.android.synthetic.main.detail_container_ll.*
+import java.util.*
+
 
 /**
  * Created by Ponomarenko Oleh on 5/2/2018.
  */
 
 class ContactFragment : Fragment(), ContactView, View.OnClickListener {
+
 
     private val contactPresenter: ContactPresenter by lazy { ContactPresentImpl() }
 
@@ -45,7 +48,6 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == ContactPresentImpl.CHECK_PERMISSION_CALL_REQUEST) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 contactPresenter.prepareCall(barcode?.contactInfo)
@@ -107,7 +109,7 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         if (emails == null) {
             return
         } else if (emails.size == 1) {
-            sendEmail(emails.first().address)
+            sendEmail(emails.first())
             return
         }
 
@@ -118,13 +120,15 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         builder.setTitle(getString(R.string.choose_email_title))
         builder.setItems(emailItems.toTypedArray(), { dialog, which ->
             dialog.dismiss()
-            sendEmail(emails[which].address)
+            sendEmail(emails[which])
         })
         builder.show()
     }
 
-    private fun sendEmail(email: String?) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(getString(R.string.send_email_scheme), email, null))
+    private fun sendEmail(email: Barcode.Email) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(getString(R.string.send_email_scheme), email.address, null))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, email.subject)
+        emailIntent.putExtra(Intent.EXTRA_TEXT, email.body)
         startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_title)))
     }
 
@@ -138,6 +142,17 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         shareIntent.type = getString(R.string.share_type)
         shareIntent.putExtra(Intent.EXTRA_TEXT, content)
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)))
+    }
+
+    override fun openBrowser(url: Uri) {
+        val i = Intent(Intent.ACTION_VIEW)
+        i.data = url
+        startActivity(i)
+    }
+
+    override fun openGoogleMaps(uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
     }
 
 }

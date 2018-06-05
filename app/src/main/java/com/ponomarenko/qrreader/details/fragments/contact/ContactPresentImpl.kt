@@ -2,6 +2,7 @@ package com.ponomarenko.qrreader.details.fragments.contact
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.google.android.gms.vision.barcode.Barcode
@@ -64,21 +65,21 @@ class ContactPresentImpl : ContactPresenter {
 
         val name = barcode.contactInfo.name.formattedName
         if (name.isNotEmpty()) {
-            text.append(name).append("\n")
+            text.append(name).append("\n\n")
         }
 
         val title = barcode.contactInfo.title
         if (title.isNotEmpty()) {
-            text.append(title).append("\n")
+            text.append(title).append("\n\n")
         }
 
         val organization = barcode.contactInfo.organization
         if (organization.isNotEmpty()) {
-            text.append(organization).append("\n")
+            text.append(organization).append("\n\n")
         }
 
         val phones = StringBuilder()
-        barcode.contactInfo.phones.iterator().forEach { phone -> phones.append(phone?.number).append("\n") }
+        barcode.contactInfo.phones.iterator().forEach { phone -> phones.append(phone?.number).append("\n\n") }
         contactView.setCallBtnVisible(phones.isNotEmpty())
         contactView.setAddContactBtnVisible(phones.isNotEmpty())
         if (phones.isNotEmpty()) {
@@ -86,21 +87,21 @@ class ContactPresentImpl : ContactPresenter {
         }
 
         val emails = StringBuilder()
-        barcode.contactInfo.emails.iterator().forEach { email -> emails.append(email?.address).append("\n") }
+        barcode.contactInfo.emails.iterator().forEach { email -> emails.append(email?.address).append("\n\n") }
         contactView.setEmailBtnVisible(emails.isNotEmpty())
         if (emails.isNotEmpty()) {
             text.append(emails)
         }
 
         val addresses = StringBuilder()
-        barcode.contactInfo.addresses.iterator().forEach { address -> address?.addressLines?.iterator()?.forEach { addressLine -> addresses.append(addressLine).append("\n") } }
+        barcode.contactInfo.addresses.iterator().forEach { address -> address?.addressLines?.iterator()?.forEach { addressLine -> addresses.append(addressLine).append("\n\n") } }
         contactView.setMapBtnVisible(addresses.isNotEmpty())
         if (addresses.isNotEmpty()) {
             text.append(addresses)
         }
 
         val urls = StringBuilder()
-        barcode.contactInfo.urls.iterator().forEach { url -> urls.append(url).append("\n") }
+        barcode.contactInfo.urls.iterator().forEach { url -> urls.append(url).append("\n\n") }
         contactView.setBrowserBtnVisible(urls.isNotEmpty())
         if (urls.isNotEmpty()) {
             text.append(urls)
@@ -110,7 +111,15 @@ class ContactPresentImpl : ContactPresenter {
     }
 
     override fun onBrowserBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        TODO("not implemented - onBrowserBtnPressed")
+        var url: String = contactInfo?.urls?.first() ?: return
+
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+        } else {
+            url = "http://$url"
+        }
+        val uri = Uri.parse(url)
+
+        contactView.openBrowser(uri)
     }
 
     override fun onAddContactBtnPressed(contactInfo: Barcode.ContactInfo?) {
@@ -118,11 +127,12 @@ class ContactPresentImpl : ContactPresenter {
     }
 
     override fun onMapBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        TODO("not implemented - onMapBtnPressed")
-    }
+        val textAddress = StringBuilder()
+        val firstAddress = contactInfo?.addresses?.first()?.addressLines
+        firstAddress?.forEach { currentAddress -> textAddress.append(currentAddress) }
 
-    override fun onEmailBtnPressed(contactInfo: Barcode.ContactInfo?) {
-     //TODO remove this method
+        val uri: Uri = Uri.parse("http://maps.google.co.in/maps?q=".plus(textAddress))
+        contactView.openGoogleMaps(uri)
     }
 
     override fun onShareBtnPressed(barcode: Barcode?) {
