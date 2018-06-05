@@ -18,4 +18,8 @@
     <string name="fragment_title_url">Web-site</string>
     <string name="share_title">Send via</string>
     <string name="share_type">text/plain</string>
+    <string name="choose_email_title">Choose email</string>
+    <string name="send_email_scheme">mailto</string>
+    <string name="send_email_title">Send email...</string>
+    <string name="intent_call_type">tel:</string>
 </resources>

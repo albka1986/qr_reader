@@ -87,7 +87,7 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
     @SuppressLint("MissingPermission")
     override fun initCall(phone: String) {
         val intent = Intent(Intent.ACTION_CALL)
-        intent.data = Uri.parse("tel:".plus(phone))
+        intent.data = Uri.parse(getString(R.string.intent_call_type).plus(phone))
         context?.startActivity(intent)
     }
 
@@ -107,7 +107,7 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         if (emails == null) {
             return
         } else if (emails.size == 1) {
-            sendEmail(emails[0].address)
+            sendEmail(emails.first().address)
             return
         }
 
@@ -115,7 +115,7 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         emails.forEach { email -> emailItems.add(email.address) }
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Choose email")
+        builder.setTitle(getString(R.string.choose_email_title))
         builder.setItems(emailItems.toTypedArray(), { dialog, which ->
             dialog.dismiss()
             sendEmail(emails[which].address)
@@ -124,9 +124,8 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
     }
 
     private fun sendEmail(email: String?) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", email, null))
-        startActivity(Intent.createChooser(emailIntent, "Send email..."))
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(getString(R.string.send_email_scheme), email, null))
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_title)))
     }
 
     override fun setData(detailedInfoText: String) {
