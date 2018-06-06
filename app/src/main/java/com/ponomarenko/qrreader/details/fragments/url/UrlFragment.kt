@@ -25,6 +25,8 @@ class UrlFragment : Fragment(), UrlView {
     override fun onStart() {
         super.onStart()
         urlPresenter.bind(this)
+        val barcode: Barcode = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)!!
+        urlPresenter.setData(barcode)
     }
 
     override fun onStop() {
@@ -34,11 +36,5 @@ class UrlFragment : Fragment(), UrlView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_url, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val barcode: Barcode = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)!!
-        urlPresenter.setData(barcode)
     }
 }

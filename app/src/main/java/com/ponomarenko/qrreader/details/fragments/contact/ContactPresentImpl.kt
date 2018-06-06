@@ -17,12 +17,8 @@ class ContactPresentImpl : ContactPresenter {
 
     private var contactView: ContactView? = null
 
-    override fun onCallBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        if (contactInfo?.phones == null || contactInfo.phones.first() == null) {
-            return
-        }
-        val phoneNumber = contactInfo.phones.first().number
-        contactView?.initCall(phoneNumber)
+    override fun onCallBtnPressed(phone: String) {
+        contactView?.initCall(phone)
     }
 
     override fun bind(contactView: ContactView) {

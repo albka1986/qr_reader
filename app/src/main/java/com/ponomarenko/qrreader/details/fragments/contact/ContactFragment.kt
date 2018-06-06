@@ -57,7 +57,7 @@ class ContactFragment : Fragment(), ContactView {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == CHECK_PERMISSION_CALL_REQUEST) {
             if ((grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)) {
-                contactPresenter.onCallBtnPressed(barcode?.contactInfo)
+                choosePhoneNumber()
             }
         }
     }
@@ -107,15 +107,32 @@ class ContactFragment : Fragment(), ContactView {
     private fun checkCallPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                contactPresenter.onCallBtnPressed(barcode.contactInfo)
+                choosePhoneNumber()
+
             } else {
                 requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
             }
         } else {
-            contactPresenter.onCallBtnPressed(barcode.contactInfo)
+            choosePhoneNumber()
         }
     }
 
+    private fun choosePhoneNumber() {
+        if (barcode.contactInfo.phones.size == 1) {
+            contactPresenter.onCallBtnPressed(barcode.contactInfo.phones.first().number)
+        } else {
+            val phonesItems = mutableListOf<String>()
+            barcode.contactInfo.phones.forEach { phone -> phonesItems.add(phone.number) }
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose number")
+            builder.setItems(phonesItems.toTypedArray(), { dialog, which ->
+                dialog.dismiss()
+                contactPresenter.onCallBtnPressed(barcode.contactInfo.phones[which].number)
+            })
+            builder.show()
+        }
+    }
 
     private fun chooseEmail(emails: Array<out Barcode.Email>?) {
         if (emails == null) {

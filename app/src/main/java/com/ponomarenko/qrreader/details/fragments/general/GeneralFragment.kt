@@ -23,6 +23,10 @@ class GeneralFragment : Fragment(), GeneralView {
     override fun onStart() {
         super.onStart()
         generalPresenter.bind(this)
+        val rawData = arguments?.getString(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
+        if (rawData != null) {
+            generalPresenter.setData(rawData)
+        }
     }
 
     override fun onStop() {
@@ -34,11 +38,4 @@ class GeneralFragment : Fragment(), GeneralView {
         return inflater.inflate(R.layout.fragment_general, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val rawData = arguments?.getString(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
-        if (rawData != null) {
-            generalPresenter.setData(rawData)
-        }
-    }
 }
