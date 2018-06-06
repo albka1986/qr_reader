@@ -5,14 +5,19 @@ package com.ponomarenko.qrreader.details.fragments.default
  */
 class GeneralPresenterImpl : GeneralPresenter {
 
-    private lateinit var generalView: GeneralView
+
+    private var generalView: GeneralView? = null
 
     override fun setData(rawData: String) {
-        generalView.setData(rawData)
+        generalView?.setData(rawData)
     }
 
     override fun bind(generalView: GeneralView) {
         this.generalView = generalView
+    }
+
+    override fun unbind() {
+        generalView = null
     }
 
 }

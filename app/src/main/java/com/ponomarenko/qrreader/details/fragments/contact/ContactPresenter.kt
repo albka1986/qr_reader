@@ -10,8 +10,6 @@ interface ContactPresenter {
     fun bind(contactView: ContactView)
     fun unbind()
     fun onCallBtnPressed(contactInfo: Barcode.ContactInfo?)
-    fun requestPermissions(contactInfo: Barcode.ContactInfo?)
-    fun prepareCall(contactInfo: Barcode.ContactInfo?)
     fun onBrowserBtnPressed(contactInfo: Barcode.ContactInfo?)
     fun onAddContactBtnPressed(contactInfo: Barcode.ContactInfo?)
     fun onMapBtnPressed(contactInfo: Barcode.ContactInfo?)

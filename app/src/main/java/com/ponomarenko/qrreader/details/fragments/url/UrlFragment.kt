@@ -22,9 +22,14 @@ class UrlFragment : Fragment(), UrlView {
 
     private val urlPresenter: UrlPresenter by lazy { UrlPresenterImpl() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         urlPresenter.bind(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        urlPresenter.unbind()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

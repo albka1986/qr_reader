@@ -8,4 +8,5 @@ import com.google.android.gms.vision.barcode.Barcode
 interface DisplayInfoPresenter {
     fun bind(displayInfoView: DisplayInfoView)
     fun detectFragment(barcode: Barcode?)
+    fun unbind()
 }

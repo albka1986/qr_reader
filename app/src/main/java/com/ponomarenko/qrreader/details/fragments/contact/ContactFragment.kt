@@ -1,10 +1,12 @@
 package com.ponomarenko.qrreader.details.fragments.contact
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.support.v4.app.Fragment
@@ -14,25 +16,32 @@ import android.view.ViewGroup
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
+import com.ponomarenko.qrreader.setVisible
 import kotlinx.android.synthetic.main.cat_button_ll.*
 import kotlinx.android.synthetic.main.detail_container_ll.*
-import java.util.*
-
 
 /**
  * Created by Ponomarenko Oleh on 5/2/2018.
  */
 
-class ContactFragment : Fragment(), ContactView, View.OnClickListener {
+class ContactFragment : Fragment(), ContactView {
 
+    companion object {
+        const val CHECK_PERMISSION_CALL_REQUEST: Int = 201
+    }
 
     private val contactPresenter: ContactPresenter by lazy { ContactPresentImpl() }
 
-    private var barcode: Barcode? = null
+    private var barcode: Barcode? = null //TODO it is not null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         contactPresenter.bind(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        contactPresenter.unbind()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,47 +53,51 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         barcode = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
         if (barcode != null) {
             contactPresenter.updateUI(barcode!!)
-            share_btn.setOnClickListener(this)
+            share_btn.setOnClickListener { contactPresenter.onShareBtnPressed(barcode) }
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == ContactPresentImpl.CHECK_PERMISSION_CALL_REQUEST) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                contactPresenter.prepareCall(barcode?.contactInfo)
+        if (requestCode == CHECK_PERMISSION_CALL_REQUEST) {
+            if ((grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)) {
+                contactPresenter.onCallBtnPressed(barcode?.contactInfo)
             }
         }
     }
 
     override fun setCallBtnVisible(visible: Boolean) {
-        call_btn.visibility = if (visible) View.VISIBLE else View.GONE
-        call_btn.setOnClickListener(this)
+        call_btn.setVisible(visible)
+        if (visible) {
+            call_btn.setOnClickListener { checkCallPermission() }
+        }
     }
 
     override fun setBrowserBtnVisible(visible: Boolean) {
-        browser_btn.visibility = if (visible) View.VISIBLE else View.GONE
-        browser_btn.setOnClickListener(this)
+        browser_btn.setVisible(visible)
+        if (visible) {
+            browser_btn.setOnClickListener { contactPresenter.onBrowserBtnPressed(barcode?.contactInfo) } // TODO looks better, isn't it?
+        }
     }
 
     override fun setMapBtnVisible(visible: Boolean) {
-        map_btn.visibility = if (visible) View.VISIBLE else View.GONE
-        map_btn.setOnClickListener(this)
-
+        map_btn.setVisible(visible)
+        if (visible) {
+            map_btn.setOnClickListener { contactPresenter.onMapBtnPressed(barcode?.contactInfo) }
+        }
     }
 
     override fun setAddContactBtnVisible(visible: Boolean) {
-        add_contact_btn.visibility = if (visible) View.VISIBLE else View.GONE
-        add_contact_btn.setOnClickListener(this)
-
+        add_contact_btn.setVisible(visible)
+        if (visible) {
+            add_contact_btn.setOnClickListener { contactPresenter.onAddContactBtnPressed(barcode?.contactInfo) }
+        }
     }
 
     override fun setEmailBtnVisible(visible: Boolean) {
-        email_btn.visibility = if (visible) View.VISIBLE else View.GONE
-        email_btn.setOnClickListener(this)
-    }
-
-    override fun getViewFragment(): Fragment? {
-        return this
+        email_btn.setVisible(visible)
+        if (visible) {
+            email_btn.setOnClickListener { chooseEmail(barcode?.contactInfo?.emails) }
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -94,17 +107,18 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
         context?.startActivity(intent)
     }
 
-    override fun onClick(v: View?) {
-        val contactInfo = barcode?.contactInfo
-        when (v?.id) {
-            R.id.call_btn -> contactPresenter.onCallBtnPressed(contactInfo)
-            R.id.browser_btn -> contactPresenter.onBrowserBtnPressed(contactInfo)
-            R.id.add_contact_btn -> contactPresenter.onAddContactBtnPressed(contactInfo)
-            R.id.map_btn -> contactPresenter.onMapBtnPressed(contactInfo)
-            R.id.share_btn -> contactPresenter.onShareBtnPressed(barcode)
-            R.id.email_btn -> chooseEmail(contactInfo?.emails)
+    private fun checkCallPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                contactPresenter.onCallBtnPressed(barcode?.contactInfo)
+            } else {
+                requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
+            }
+        } else {
+            contactPresenter.onCallBtnPressed(barcode?.contactInfo)
         }
     }
+
 
     private fun chooseEmail(emails: Array<out Barcode.Email>?) {
         if (emails == null) {
@@ -114,7 +128,8 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
             return
         }
 
-        val emailItems: ArrayList<CharSequence> = ArrayList()
+        val emailItems = mutableListOf<CharSequence>()
+
         emails.forEach { email -> emailItems.add(email.address) }
 
         val builder = AlertDialog.Builder(requireContext())
@@ -138,11 +153,11 @@ class ContactFragment : Fragment(), ContactView, View.OnClickListener {
     }
 
     override fun shareContent(content: String?) {
-        val shareIntent = Intent()
-        shareIntent.action = Intent.ACTION_SEND
-        shareIntent.type = getString(R.string.share_type)
-        shareIntent.putExtra(Intent.EXTRA_TEXT, content)
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)))
+        with(Intent()) {
+            action = Intent.ACTION_SEND
+            type = getString(R.string.share_type)
+            putExtra(Intent.EXTRA_TEXT, content)
+        }.let { startActivity(Intent.createChooser(it, getString(R.string.share_title))) }
     }
 
     override fun openBrowser(url: Uri) {

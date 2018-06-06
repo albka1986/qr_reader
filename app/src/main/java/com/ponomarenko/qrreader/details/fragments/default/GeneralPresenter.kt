@@ -5,5 +5,6 @@ package com.ponomarenko.qrreader.details.fragments.default
  */
 interface GeneralPresenter {
     fun bind(generalView: GeneralView)
+    fun unbind()
     fun setData(rawData: String)
 }

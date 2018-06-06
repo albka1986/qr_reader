@@ -8,19 +8,19 @@ import com.google.android.gms.vision.barcode.Barcode
  */
 class UrlPresenterImpl : UrlPresenter {
 
-    private lateinit var urlView: UrlView
+    private var urlView: UrlView? = null
 
     override fun bind(urlView: UrlView) {
         this.urlView = urlView
     }
 
     override fun unbind() {
-        TODO("not implemented unbind")
+        urlView = null
     }
 
     override fun setData(barcode: Barcode) {
         val text = parseUrlInfo(barcode)
-        urlView.setData(text)
+        urlView?.setData(text)
     }
 
     private fun parseUrlInfo(barcode: Barcode): String {

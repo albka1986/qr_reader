@@ -8,7 +8,6 @@ interface ContactView {
 
     fun setData(detailedInfoText: String)
     fun initCall(phone: String)
-    fun getViewFragment(): Fragment?
     fun setCallBtnVisible(visible: Boolean)
     fun setBrowserBtnVisible(visible: Boolean)
     fun setMapBtnVisible(visible: Boolean)

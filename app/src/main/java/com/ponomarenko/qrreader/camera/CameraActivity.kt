@@ -2,6 +2,7 @@ package com.ponomarenko.qrreader.camera
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -23,10 +24,11 @@ class CameraActivity : Activity() {
 
     companion object {
         const val BARCODE_KEY: String = "barcodeIntentKey"
+        const val CHECK_PERMISSION_CAMERA_REQUEST = 200
+        fun getIntent(context: Context) = Intent(context, CameraActivity::class.java)
     }
 
     private val tag = this::class.qualifiedName
-    private val permissionCode = 101
     private lateinit var cameraSource: CameraSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,8 +71,7 @@ class CameraActivity : Activity() {
     private fun onBarcodeDetected(detections: Detector.Detections<Barcode>?) {
         val barcodeList: SparseArray<Barcode> = detections!!.detectedItems
         if (barcodeList.size() != 0) {
-
-            val intent = Intent(this@CameraActivity, DisplayInfoActivity::class.java)
+            val intent = DisplayInfoActivity.getIntent(this)
             intent.putExtra(BARCODE_KEY, barcodeList.valueAt(0))
             startActivity(intent)
 
@@ -87,7 +88,7 @@ class CameraActivity : Activity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(arrayOf(Manifest.permission.CAMERA), permissionCode)
+                requestPermissions(arrayOf(Manifest.permission.CAMERA), CHECK_PERMISSION_CAMERA_REQUEST)
             } else {
                 runCamera()
             }
@@ -98,7 +99,7 @@ class CameraActivity : Activity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            permissionCode -> {
+            CHECK_PERMISSION_CAMERA_REQUEST -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     runCamera()
                 } else {

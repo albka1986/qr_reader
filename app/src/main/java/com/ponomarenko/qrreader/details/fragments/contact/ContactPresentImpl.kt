@@ -1,12 +1,7 @@
 package com.ponomarenko.qrreader.details.fragments.contact
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
-import android.support.annotation.RequiresApi
 import com.google.android.gms.vision.barcode.Barcode
-
 
 /**
  * Created by Ponomarenko Oleh on 5/31/2018.
@@ -14,36 +9,14 @@ import com.google.android.gms.vision.barcode.Barcode
 
 class ContactPresentImpl : ContactPresenter {
 
-
-    companion object {
-        const val CHECK_PERMISSION_CALL_REQUEST: Int = 201
-    }
-
-    private lateinit var contactView: ContactView
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    override fun requestPermissions(contactInfo: Barcode.ContactInfo?) {
-        contactView.getViewFragment()?.requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
-    }
+    private var contactView: ContactView? = null
 
     override fun onCallBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (contactView.getViewFragment()?.activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                prepareCall(contactInfo)
-            } else {
-                requestPermissions(contactInfo)
-            }
-        } else {
-            prepareCall(contactInfo)
-        }
-    }
-
-    override fun prepareCall(contactInfo: Barcode.ContactInfo?) {
-        if (contactInfo?.phones == null || contactInfo.phones[0] == null) {
+        if (contactInfo?.phones == null || contactInfo.phones.first() == null) {
             return
         }
-        val phoneNumber = contactInfo.phones[0].number
-        contactView.initCall(phoneNumber)
+        val phoneNumber = contactInfo.phones.first().number
+        contactView?.initCall(phoneNumber)
     }
 
     override fun bind(contactView: ContactView) {
@@ -51,15 +24,30 @@ class ContactPresentImpl : ContactPresenter {
     }
 
     override fun unbind() {
-        TODO("not implemented unbind")
+        contactView = null
     }
 
-    override fun updateUI(barcode: Barcode) {
+    override fun updateUI(barcode: Barcode) {// TODO naming
         val text = parseContactInfo(barcode)
-        contactView.setData(text)
+        contactView?.setData(text)
     }
 
     private fun parseContactInfo(barcode: Barcode): String {
+
+        //TODO Array -> filter not null -> join to string
+
+        with(barcode.contactInfo) {
+            val array = arrayOf(name.formattedName,
+                    title,
+                    organization,
+                    phones,
+                    emails,
+                    addresses?.map { it.addressLines }?.joinToString(", ", "", ""),
+                    urls)
+                    .filterNotNull()
+                    .joinToString("\n\n", "", "")
+        }
+
 
         val text = StringBuilder()
 
@@ -80,29 +68,29 @@ class ContactPresentImpl : ContactPresenter {
 
         val phones = StringBuilder()
         barcode.contactInfo.phones.iterator().forEach { phone -> phones.append(phone?.number).append("\n\n") }
-        contactView.setCallBtnVisible(phones.isNotEmpty())
-        contactView.setAddContactBtnVisible(phones.isNotEmpty())
+        contactView?.setCallBtnVisible(phones.isNotEmpty())
+        contactView?.setAddContactBtnVisible(phones.isNotEmpty())
         if (phones.isNotEmpty()) {
             text.append(phones)
         }
 
         val emails = StringBuilder()
         barcode.contactInfo.emails.iterator().forEach { email -> emails.append(email?.address).append("\n\n") }
-        contactView.setEmailBtnVisible(emails.isNotEmpty())
+        contactView?.setEmailBtnVisible(emails.isNotEmpty())
         if (emails.isNotEmpty()) {
             text.append(emails)
         }
 
         val addresses = StringBuilder()
         barcode.contactInfo.addresses.iterator().forEach { address -> address?.addressLines?.iterator()?.forEach { addressLine -> addresses.append(addressLine).append("\n\n") } }
-        contactView.setMapBtnVisible(addresses.isNotEmpty())
+        contactView?.setMapBtnVisible(addresses.isNotEmpty())
         if (addresses.isNotEmpty()) {
             text.append(addresses)
         }
 
         val urls = StringBuilder()
         barcode.contactInfo.urls.iterator().forEach { url -> urls.append(url).append("\n\n") }
-        contactView.setBrowserBtnVisible(urls.isNotEmpty())
+        contactView?.setBrowserBtnVisible(urls.isNotEmpty())
         if (urls.isNotEmpty()) {
             text.append(urls)
         }
@@ -119,12 +107,12 @@ class ContactPresentImpl : ContactPresenter {
         }
         val uri = Uri.parse(url)
 
-        contactView.openBrowser(uri)
+        contactView?.openBrowser(uri)
     }
 
     override fun onAddContactBtnPressed(contactInfo: Barcode.ContactInfo?) {
         //TODO parse a contact info here and pass an object Contact
-        contactView.addContact(contactInfo!!)
+        contactView?.addContact(contactInfo!!)
 
     }
 
@@ -134,11 +122,11 @@ class ContactPresentImpl : ContactPresenter {
         firstAddress?.forEach { currentAddress -> textAddress.append(currentAddress) }
 
         val uri: Uri = Uri.parse("http://maps.google.co.in/maps?q=".plus(textAddress))
-        contactView.openGoogleMaps(uri)
+        contactView?.openGoogleMaps(uri)
     }
 
     override fun onShareBtnPressed(barcode: Barcode?) {
         val text = barcode?.displayValue
-        contactView.shareContent(text)
+        contactView?.shareContent(text)
     }
 }
