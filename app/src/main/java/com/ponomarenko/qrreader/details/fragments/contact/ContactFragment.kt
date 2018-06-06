@@ -32,11 +32,17 @@ class ContactFragment : Fragment(), ContactView {
 
     private val contactPresenter: ContactPresenter by lazy { ContactPresentImpl() }
 
-    private var barcode: Barcode? = null //TODO it is not null
+    private lateinit var barcode: Barcode
 
     override fun onStart() {
         super.onStart()
         contactPresenter.bind(this)
+        val argBarcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
+        if (argBarcode != null) {
+            barcode = argBarcode
+            contactPresenter.parseBarcode(barcode)
+            share_btn.setOnClickListener { contactPresenter.onShareBtnPressed(barcode) }
+        }
     }
 
     override fun onStop() {
@@ -46,15 +52,6 @@ class ContactFragment : Fragment(), ContactView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_contact, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        barcode = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
-        if (barcode != null) {
-            contactPresenter.updateUI(barcode!!)
-            share_btn.setOnClickListener { contactPresenter.onShareBtnPressed(barcode) }
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -75,28 +72,28 @@ class ContactFragment : Fragment(), ContactView {
     override fun setBrowserBtnVisible(visible: Boolean) {
         browser_btn.setVisible(visible)
         if (visible) {
-            browser_btn.setOnClickListener { contactPresenter.onBrowserBtnPressed(barcode?.contactInfo) } // TODO looks better, isn't it?
+            browser_btn.setOnClickListener { contactPresenter.onBrowserBtnPressed(barcode.contactInfo) }
         }
     }
 
     override fun setMapBtnVisible(visible: Boolean) {
         map_btn.setVisible(visible)
         if (visible) {
-            map_btn.setOnClickListener { contactPresenter.onMapBtnPressed(barcode?.contactInfo) }
+            map_btn.setOnClickListener { contactPresenter.onMapBtnPressed(barcode.contactInfo) }
         }
     }
 
     override fun setAddContactBtnVisible(visible: Boolean) {
         add_contact_btn.setVisible(visible)
         if (visible) {
-            add_contact_btn.setOnClickListener { contactPresenter.onAddContactBtnPressed(barcode?.contactInfo) }
+            add_contact_btn.setOnClickListener { contactPresenter.onAddContactBtnPressed(barcode.contactInfo) }
         }
     }
 
     override fun setEmailBtnVisible(visible: Boolean) {
         email_btn.setVisible(visible)
         if (visible) {
-            email_btn.setOnClickListener { chooseEmail(barcode?.contactInfo?.emails) }
+            email_btn.setOnClickListener { chooseEmail(barcode.contactInfo?.emails) }
         }
     }
 
@@ -110,12 +107,12 @@ class ContactFragment : Fragment(), ContactView {
     private fun checkCallPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                contactPresenter.onCallBtnPressed(barcode?.contactInfo)
+                contactPresenter.onCallBtnPressed(barcode.contactInfo)
             } else {
                 requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
             }
         } else {
-            contactPresenter.onCallBtnPressed(barcode?.contactInfo)
+            contactPresenter.onCallBtnPressed(barcode.contactInfo)
         }
     }
 

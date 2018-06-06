@@ -6,7 +6,7 @@ import com.google.android.gms.vision.barcode.Barcode
  * Created by Ponomarenko Oleh on 5/31/2018.
  */
 interface ContactPresenter {
-    fun updateUI(barcode: Barcode)
+    fun parseBarcode(barcode: Barcode)
     fun bind(contactView: ContactView)
     fun unbind()
     fun onCallBtnPressed(contactInfo: Barcode.ContactInfo?)

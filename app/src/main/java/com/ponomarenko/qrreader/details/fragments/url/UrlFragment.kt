@@ -38,9 +38,7 @@ class UrlFragment : Fragment(), UrlView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
-        if (barcode != null) {
-            urlPresenter.setData(barcode)
-        }
+        val barcode: Barcode = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)!!
+        urlPresenter.setData(barcode)
     }
 }

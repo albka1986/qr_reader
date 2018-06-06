@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.details.fragments.contact.ContactFragment
-import com.ponomarenko.qrreader.details.fragments.default.GeneralFragment
+import com.ponomarenko.qrreader.details.fragments.general.GeneralFragment
 import com.ponomarenko.qrreader.details.fragments.url.UrlFragment
 
 /**
@@ -26,21 +26,17 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
         this.displayInfoView = null
     }
 
-    override fun detectFragment(barcode: Barcode?) {
-        barcode?.let {
-            TODO("move when clause here")
-        }
-
+    override fun detectFragment(barcode: Barcode) {
         when {
-            barcode!!.contactInfo != null -> launchContactFragment(barcode)
+            barcode.contactInfo != null -> launchContactFragment(barcode)
             barcode.url != null -> launchUrlFragment(barcode)
 
-        /*barcode.email != null -> BarcodeType.EMAIL
-        barcode.phone != null -> BarcodeType.PHONE
-        barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
-        barcode.ic_wifi != null -> BarcodeType.WIFI
-        barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
-        barcode.geoPoint != null -> BarcodeType.GEO_POINT*/
+//          barcode.email != null -> BarcodeType.EMAIL
+//          barcode.phone != null -> BarcodeType.PHONE
+//          barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
+//          barcode.ic_wifi != null -> BarcodeType.WIFI
+//          barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
+//          barcode.geoPoint != null -> BarcodeType.GEO_POINT
 
             else -> {
                 launchGeneralFragment(barcode)
@@ -49,27 +45,20 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
     }
 
     private fun launchUrlFragment(barcode: Barcode) {
-        TODO("refactoring")
         val urlFragment = UrlFragment()
-        val args = Bundle()
-        args.putParcelable(ARGUMENT_DATA_KEY, barcode)
-        urlFragment.arguments = args
+        urlFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
         displayInfoView?.launchFragment(urlFragment)
     }
 
-    private fun launchContactFragment(barcode: Barcode?) {
-        TODO("refactoring")
+    private fun launchContactFragment(barcode: Barcode) {
         val contactFragment: Fragment = ContactFragment()
-        val args = Bundle()
-        args.putParcelable(ARGUMENT_DATA_KEY, barcode)
-        contactFragment.arguments = args
+        contactFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
         displayInfoView?.launchFragment(contactFragment)
     }
 
-    private fun launchGeneralFragment(barcode: Barcode?) {
-        TODO("refactoring")
+    private fun launchGeneralFragment(barcode: Barcode) {
         val generalFragment: Fragment = GeneralFragment()
-        generalFragment.arguments = Bundle().apply { putString(ARGUMENT_DATA_KEY, barcode!!.displayValue) }
+        generalFragment.arguments = Bundle().apply { putString(ARGUMENT_DATA_KEY, barcode.displayValue) }
         displayInfoView?.launchFragment(generalFragment)
     }
 }

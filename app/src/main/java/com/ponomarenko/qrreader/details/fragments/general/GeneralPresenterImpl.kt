@@ -1,4 +1,4 @@
-package com.ponomarenko.qrreader.details.fragments.default
+package com.ponomarenko.qrreader.details.fragments.general
 
 /**
  * Created by Ponomarenko Oleh on 31.05.2018.

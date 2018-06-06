@@ -9,6 +9,12 @@ import com.google.android.gms.vision.barcode.Barcode
 
 class ContactPresentImpl : ContactPresenter {
 
+    companion object {
+        const val GOOGLE_MAP_URL = "http://maps.google.co.in/maps?q="
+        const val HTTP = "http://"
+        const val HTTPS = "https://"
+    }
+
     private var contactView: ContactView? = null
 
     override fun onCallBtnPressed(contactInfo: Barcode.ContactInfo?) {
@@ -27,83 +33,34 @@ class ContactPresentImpl : ContactPresenter {
         contactView = null
     }
 
-    override fun updateUI(barcode: Barcode) {// TODO naming
+    override fun parseBarcode(barcode: Barcode) {
         val text = parseContactInfo(barcode)
         contactView?.setData(text)
     }
 
     private fun parseContactInfo(barcode: Barcode): String {
-
-        //TODO Array -> filter not null -> join to string
-
         with(barcode.contactInfo) {
-            val array = arrayOf(name.formattedName,
+            return arrayOf(name.formattedName,
                     title,
                     organization,
-                    phones,
-                    emails,
-                    addresses?.map { it.addressLines }?.joinToString(", ", "", ""),
-                    urls)
+                    phones?.joinToString("\n", "", "") { it.number }.apply {
+                        contactView?.setCallBtnVisible(true)
+                        contactView?.setAddContactBtnVisible(true)
+                    },
+                    emails?.joinToString("\n", "", "") { it.address }.apply { contactView?.setMapBtnVisible(true) },
+                    addresses?.map { it.addressLines?.joinToString("\n", "", "") }.apply { contactView?.setMapBtnVisible(true) },
+                    urls?.joinToString("\n", "", "").apply { contactView?.setBrowserBtnVisible(true) })
                     .filterNotNull()
                     .joinToString("\n\n", "", "")
         }
-
-
-        val text = StringBuilder()
-
-        val name = barcode.contactInfo.name.formattedName
-        if (name.isNotEmpty()) {
-            text.append(name).append("\n\n")
-        }
-
-        val title = barcode.contactInfo.title
-        if (title.isNotEmpty()) {
-            text.append(title).append("\n\n")
-        }
-
-        val organization = barcode.contactInfo.organization
-        if (organization.isNotEmpty()) {
-            text.append(organization).append("\n\n")
-        }
-
-        val phones = StringBuilder()
-        barcode.contactInfo.phones.iterator().forEach { phone -> phones.append(phone?.number).append("\n\n") }
-        contactView?.setCallBtnVisible(phones.isNotEmpty())
-        contactView?.setAddContactBtnVisible(phones.isNotEmpty())
-        if (phones.isNotEmpty()) {
-            text.append(phones)
-        }
-
-        val emails = StringBuilder()
-        barcode.contactInfo.emails.iterator().forEach { email -> emails.append(email?.address).append("\n\n") }
-        contactView?.setEmailBtnVisible(emails.isNotEmpty())
-        if (emails.isNotEmpty()) {
-            text.append(emails)
-        }
-
-        val addresses = StringBuilder()
-        barcode.contactInfo.addresses.iterator().forEach { address -> address?.addressLines?.iterator()?.forEach { addressLine -> addresses.append(addressLine).append("\n\n") } }
-        contactView?.setMapBtnVisible(addresses.isNotEmpty())
-        if (addresses.isNotEmpty()) {
-            text.append(addresses)
-        }
-
-        val urls = StringBuilder()
-        barcode.contactInfo.urls.iterator().forEach { url -> urls.append(url).append("\n\n") }
-        contactView?.setBrowserBtnVisible(urls.isNotEmpty())
-        if (urls.isNotEmpty()) {
-            text.append(urls)
-        }
-
-        return text.toString()
     }
 
     override fun onBrowserBtnPressed(contactInfo: Barcode.ContactInfo?) {
         var url: String = contactInfo?.urls?.first() ?: return
 
-        if (url.startsWith("http://") || url.startsWith("https://")) {
+        if (url.startsWith(HTTP) || url.startsWith(HTTPS)) {
         } else {
-            url = "http://$url"
+            url = HTTP.plus(url)
         }
         val uri = Uri.parse(url)
 
@@ -121,7 +78,7 @@ class ContactPresentImpl : ContactPresenter {
         val firstAddress = contactInfo?.addresses?.first()?.addressLines
         firstAddress?.forEach { currentAddress -> textAddress.append(currentAddress) }
 
-        val uri: Uri = Uri.parse("http://maps.google.co.in/maps?q=".plus(textAddress))
+        val uri: Uri = Uri.parse(GOOGLE_MAP_URL.plus(textAddress))
         contactView?.openGoogleMaps(uri)
     }
 

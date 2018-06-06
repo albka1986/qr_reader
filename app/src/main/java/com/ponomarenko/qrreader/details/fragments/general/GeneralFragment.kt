@@ -1,4 +1,4 @@
-package com.ponomarenko.qrreader.details.fragments.default
+package com.ponomarenko.qrreader.details.fragments.general
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
