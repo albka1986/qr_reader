@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
+import com.ponomarenko.qrreader.R.id.share_btn
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
 import com.ponomarenko.qrreader.setVisible
 import kotlinx.android.synthetic.main.cat_button_ll.*
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
  */
 
 class ContactFragment : Fragment(), ContactView {
+
 
     companion object {
         const val CHECK_PERMISSION_CALL_REQUEST: Int = 201
@@ -62,10 +64,15 @@ class ContactFragment : Fragment(), ContactView {
         }
     }
 
-    override fun setCallBtnVisible(visible: Boolean) {
+    override fun setPhoneBtnVisible(visible: Boolean) {
         call_btn.setVisible(visible)
         if (visible) {
             call_btn.setOnClickListener { checkCallPermission() }
+        }
+
+        add_contact_btn.setVisible(visible)
+        if (visible) {
+            add_contact_btn.setOnClickListener { contactPresenter.onAddContactBtnPressed(barcode.contactInfo) }
         }
     }
 
@@ -80,13 +87,6 @@ class ContactFragment : Fragment(), ContactView {
         map_btn.setVisible(visible)
         if (visible) {
             map_btn.setOnClickListener { contactPresenter.onMapBtnPressed(barcode.contactInfo) }
-        }
-    }
-
-    override fun setAddContactBtnVisible(visible: Boolean) {
-        add_contact_btn.setVisible(visible)
-        if (visible) {
-            add_contact_btn.setOnClickListener { contactPresenter.onAddContactBtnPressed(barcode.contactInfo) }
         }
     }
 

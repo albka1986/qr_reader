@@ -8,10 +8,9 @@ interface ContactView {
 
     fun setData(detailedInfoText: String)
     fun initCall(phone: String)
-    fun setCallBtnVisible(visible: Boolean)
+    fun setPhoneBtnVisible(visible: Boolean)
     fun setBrowserBtnVisible(visible: Boolean)
     fun setMapBtnVisible(visible: Boolean)
-    fun setAddContactBtnVisible(visible: Boolean)
     fun setEmailBtnVisible(visible: Boolean)
     fun shareContent(content: String?)
     fun openBrowser(url: Uri)

@@ -32,6 +32,16 @@ class ContactPresentImpl : ContactPresenter {
     override fun parseBarcode(barcode: Barcode) {
         val text = parseContactInfo(barcode)
         contactView?.setData(text)
+        checkAvailableButtons(barcode)
+    }
+
+    private fun checkAvailableButtons(barcode: Barcode) {
+        with(barcode.contactInfo) {
+            contactView?.setPhoneBtnVisible(!phones?.takeIf { it.isNotEmpty() }?.first()?.number.isNullOrEmpty())
+            contactView?.setMapBtnVisible(!addresses?.takeIf { it.isNotEmpty() }?.first()?.addressLines?.takeIf { it.isNotEmpty() }?.first().isNullOrEmpty())
+            contactView?.setBrowserBtnVisible(!urls?.takeIf { it.isNotEmpty() }?.first().isNullOrEmpty())
+            contactView?.setEmailBtnVisible(!emails?.takeIf { it.isNotEmpty() }?.first()?.address.isNullOrEmpty())
+        }
     }
 
     private fun parseContactInfo(barcode: Barcode): String {
@@ -39,13 +49,10 @@ class ContactPresentImpl : ContactPresenter {
             return arrayOf(name.formattedName,
                     title,
                     organization,
-                    phones?.joinToString("\n", "", "") { it.number }.apply {
-                        contactView?.setCallBtnVisible(true)
-                        contactView?.setAddContactBtnVisible(true)
-                    },
-                    emails?.joinToString("\n", "", "") { it.address }.apply { contactView?.setMapBtnVisible(true) },
-                    addresses?.map { it.addressLines?.joinToString("\n", "", "") }.apply { contactView?.setMapBtnVisible(true) },
-                    urls?.joinToString("\n", "", "").apply { contactView?.setBrowserBtnVisible(true) })
+                    phones?.joinToString("\n", "", "") { it.number },
+                    emails?.joinToString("\n", "", "") { it.address },
+                    addresses?.map { it.addressLines?.joinToString("\n", "", "") },
+                    urls?.joinToString("\n", "", ""))
                     .filterNotNull()
                     .joinToString("\n\n", "", "")
         }
