@@ -22,4 +22,5 @@
     <string name="send_email_scheme">mailto</string>
     <string name="send_email_title">Send email...</string>
     <string name="intent_call_type">tel:</string>
+    <string name="choose_number_dialog_title">Choose number</string>
 </resources>

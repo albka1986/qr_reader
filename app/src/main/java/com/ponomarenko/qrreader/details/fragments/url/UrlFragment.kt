@@ -16,11 +16,11 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
 
 class UrlFragment : Fragment(), UrlView {
 
+    private val urlPresenter: UrlPresenter by lazy { UrlPresenterImpl() }
+
     override fun setData(detailedInfoText: String) {
         detail_info_container_tv.text = detailedInfoText
     }
-
-    private val urlPresenter: UrlPresenter by lazy { UrlPresenterImpl() }
 
     override fun onStart() {
         super.onStart()

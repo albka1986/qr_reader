@@ -7,7 +7,7 @@ import com.google.android.gms.vision.barcode.Barcode
  * Created by Ponomarenko Oleh on 5/31/2018.
  */
 
-class ContactPresentImpl : ContactPresenter {
+class ContactPresentImpl(private var barcode: Barcode) : ContactPresenter {
 
     companion object {
         const val GOOGLE_MAP_URL = "http://maps.google.co.in/maps?q="
@@ -16,6 +16,7 @@ class ContactPresentImpl : ContactPresenter {
     }
 
     private var contactView: ContactView? = null
+
 
     override fun onCallBtnPressed(phone: String) {
         contactView?.initCall(phone)
@@ -29,10 +30,44 @@ class ContactPresentImpl : ContactPresenter {
         contactView = null
     }
 
-    override fun parseBarcode(barcode: Barcode) {
+    override fun parseBarcode() {
         val text = parseContactInfo(barcode)
         contactView?.setData(text)
         checkAvailableButtons(barcode)
+    }
+
+    override fun onBrowserBtnPressed() {
+        var url: String = barcode.contactInfo.urls?.first() ?: return
+
+        if (url.startsWith(HTTP) || url.startsWith(HTTPS)) {
+        } else {
+            url = HTTP.plus(url)
+        }
+        val uri = Uri.parse(url)
+
+        contactView?.openBrowser(uri)
+    }
+
+    override fun onAddContactBtnPressed() {
+        barcode.contactInfo.let { contactView?.addContact(it) }
+    }
+
+    override fun onMapBtnPressed() {
+        val textAddress = StringBuilder()
+        val firstAddress = barcode.contactInfo.addresses?.first()?.addressLines
+        firstAddress?.forEach { currentAddress -> textAddress.append(currentAddress) }
+
+        val uri: Uri = Uri.parse(GOOGLE_MAP_URL.plus(textAddress))
+        contactView?.openGoogleMaps(uri)
+    }
+
+    override fun onShareBtnPressed() {
+        val text = barcode.displayValue
+        contactView?.shareContent(text)
+    }
+
+    override fun getBarcode(): Barcode {
+        return this.barcode
     }
 
     private fun checkAvailableButtons(barcode: Barcode) {
@@ -58,33 +93,4 @@ class ContactPresentImpl : ContactPresenter {
         }
     }
 
-    override fun onBrowserBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        var url: String = contactInfo?.urls?.first() ?: return
-
-        if (url.startsWith(HTTP) || url.startsWith(HTTPS)) {
-        } else {
-            url = HTTP.plus(url)
-        }
-        val uri = Uri.parse(url)
-
-        contactView?.openBrowser(uri)
-    }
-
-    override fun onAddContactBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        contactInfo?.let { contactView?.addContact(it) }
-    }
-
-    override fun onMapBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        val textAddress = StringBuilder()
-        val firstAddress = contactInfo?.addresses?.first()?.addressLines
-        firstAddress?.forEach { currentAddress -> textAddress.append(currentAddress) }
-
-        val uri: Uri = Uri.parse(GOOGLE_MAP_URL.plus(textAddress))
-        contactView?.openGoogleMaps(uri)
-    }
-
-    override fun onShareBtnPressed(barcode: Barcode?) {
-        val text = barcode?.displayValue
-        contactView?.shareContent(text)
-    }
 }

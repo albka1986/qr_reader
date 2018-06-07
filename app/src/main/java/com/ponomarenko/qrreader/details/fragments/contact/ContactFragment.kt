@@ -26,23 +26,20 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
 
 class ContactFragment : Fragment(), ContactView {
 
-
     companion object {
         const val CHECK_PERMISSION_CALL_REQUEST: Int = 201
     }
 
-    private val contactPresenter: ContactPresenter by lazy { ContactPresentImpl() }
-
-    private lateinit var barcode: Barcode
+    private lateinit var contactPresenter: ContactPresenter
 
     override fun onStart() {
         super.onStart()
-        contactPresenter.bind(this)
-        val argBarcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
-        if (argBarcode != null) {
-            barcode = argBarcode
-            contactPresenter.parseBarcode(barcode)
-            share_btn.setOnClickListener { contactPresenter.onShareBtnPressed(barcode) }
+        val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
+        barcode?.let {
+            ContactPresentImpl(it)
+            contactPresenter.bind(this)
+            contactPresenter.parseBarcode()
+            share_btn.setOnClickListener { contactPresenter.onShareBtnPressed() }
         }
     }
 
@@ -71,28 +68,28 @@ class ContactFragment : Fragment(), ContactView {
 
         add_contact_btn.setVisible(visible)
         if (visible) {
-            add_contact_btn.setOnClickListener { contactPresenter.onAddContactBtnPressed(barcode.contactInfo) }
+            add_contact_btn.setOnClickListener { contactPresenter.onAddContactBtnPressed() }
         }
     }
 
     override fun setBrowserBtnVisible(visible: Boolean) {
         browser_btn.setVisible(visible)
         if (visible) {
-            browser_btn.setOnClickListener { contactPresenter.onBrowserBtnPressed(barcode.contactInfo) }
+            browser_btn.setOnClickListener { contactPresenter.onBrowserBtnPressed() }
         }
     }
 
     override fun setMapBtnVisible(visible: Boolean) {
         map_btn.setVisible(visible)
         if (visible) {
-            map_btn.setOnClickListener { contactPresenter.onMapBtnPressed(barcode.contactInfo) }
+            map_btn.setOnClickListener { contactPresenter.onMapBtnPressed() }
         }
     }
 
     override fun setEmailBtnVisible(visible: Boolean) {
         email_btn.setVisible(visible)
         if (visible) {
-            email_btn.setOnClickListener { chooseEmail(barcode.contactInfo?.emails) }
+            email_btn.setOnClickListener { chooseEmail(contactPresenter.getBarcode().contactInfo?.emails) }
         }
     }
 
@@ -103,63 +100,7 @@ class ContactFragment : Fragment(), ContactView {
         context?.startActivity(intent)
     }
 
-    private fun checkCallPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                choosePhoneNumber()
 
-            } else {
-                requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
-            }
-        } else {
-            choosePhoneNumber()
-        }
-    }
-
-    private fun choosePhoneNumber() {
-        if (barcode.contactInfo.phones.size == 1) {
-            contactPresenter.onCallBtnPressed(barcode.contactInfo.phones.first().number)
-        } else {
-            val phonesItems = mutableListOf<String>()
-            barcode.contactInfo.phones.forEach { phone -> phonesItems.add(phone.number) }
-
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Choose number")
-            builder.setItems(phonesItems.toTypedArray(), { dialog, which ->
-                dialog.dismiss()
-                contactPresenter.onCallBtnPressed(barcode.contactInfo.phones[which].number)
-            })
-            builder.show()
-        }
-    }
-
-    private fun chooseEmail(emails: Array<out Barcode.Email>?) {
-        if (emails == null) {
-            return
-        } else if (emails.size == 1) {
-            sendEmail(emails.first())
-            return
-        }
-
-        val emailItems = mutableListOf<CharSequence>()
-
-        emails.forEach { email -> emailItems.add(email.address) }
-
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(getString(R.string.choose_email_title))
-        builder.setItems(emailItems.toTypedArray(), { dialog, which ->
-            dialog.dismiss()
-            sendEmail(emails[which])
-        })
-        builder.show()
-    }
-
-    private fun sendEmail(email: Barcode.Email) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(getString(R.string.send_email_scheme), email.address, null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, email.subject)
-        emailIntent.putExtra(Intent.EXTRA_TEXT, email.body)
-        startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_title)))
-    }
 
     override fun setData(detailedInfoText: String) {
         detail_info_container_tv.text = detailedInfoText
@@ -194,6 +135,68 @@ class ContactFragment : Fragment(), ContactView {
 
         startActivity(intent)
 
+    }
+
+    private fun checkCallPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (activity?.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                choosePhoneNumber()
+
+            } else {
+                requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), CHECK_PERMISSION_CALL_REQUEST)
+            }
+        } else {
+            choosePhoneNumber()
+        }
+    }
+
+    private fun choosePhoneNumber() {
+        with(contactPresenter.getBarcode().contactInfo) {
+            if (phones?.size == 1) {
+                contactPresenter.onCallBtnPressed(phones.first().number)
+            } else {
+                val phonesItems = mutableListOf<String>()
+                phones.forEach { phone -> phonesItems.add(phone.number) }
+
+                AlertDialog.Builder(requireContext()).apply {
+                    setTitle(getString(R.string.choose_number_dialog_title))
+                    setItems(phonesItems.toTypedArray(), { dialog, which ->
+                        dialog.dismiss()
+                        contactPresenter.onCallBtnPressed(phones[which].number)
+                    })
+                    show()
+                }
+            }
+        }
+
+    }
+
+    private fun chooseEmail(emails: Array<out Barcode.Email>?) {
+        if (emails == null) {
+            return
+        } else if (emails.size == 1) {
+            sendEmail(emails.first())
+            return
+        }
+
+        val emailItems = mutableListOf<CharSequence>()
+
+        emails.forEach { email -> emailItems.add(email.address) }
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.choose_email_title))
+        builder.setItems(emailItems.toTypedArray(), { dialog, which ->
+            dialog.dismiss()
+            sendEmail(emails[which])
+        })
+        builder.show()
+    }
+
+    private fun sendEmail(email: Barcode.Email) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(getString(R.string.send_email_scheme), email.address, null))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, email.subject)
+        emailIntent.putExtra(Intent.EXTRA_TEXT, email.body)
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_title)))
     }
 
 }
