@@ -71,9 +71,7 @@ class ContactPresentImpl : ContactPresenter {
     }
 
     override fun onAddContactBtnPressed(contactInfo: Barcode.ContactInfo?) {
-        //TODO parse a contact info here and pass an object Contact
-        contactView?.addContact(contactInfo!!)
-
+        contactInfo?.let { contactView?.addContact(it) }
     }
 
     override fun onMapBtnPressed(contactInfo: Barcode.ContactInfo?) {

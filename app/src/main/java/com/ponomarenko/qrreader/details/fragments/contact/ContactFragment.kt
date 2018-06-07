@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
-import com.ponomarenko.qrreader.R.id.share_btn
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
 import com.ponomarenko.qrreader.setVisible
 import kotlinx.android.synthetic.main.cat_button_ll.*
