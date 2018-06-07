@@ -49,8 +49,8 @@ class ContactPresentImpl : ContactPresenter {
             return arrayOf(name.formattedName,
                     title,
                     organization,
-                    phones?.joinToString("\n", "", "") { it.number },
-                    emails?.joinToString("\n", "", "") { it.address },
+                    phones?.takeIf { it.isNotEmpty() }?.joinToString("\n", "", "") { it.number },
+                    emails?.takeIf { it.isNotEmpty() }?.joinToString("\n", "", "") { it.address },
                     addresses?.map { it.addressLines?.joinToString("\n", "", "") },
                     urls?.joinToString("\n", "", ""))
                     .filterNotNull()
