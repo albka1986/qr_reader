@@ -81,12 +81,12 @@ class ContactPresentImpl(private var barcode: Barcode) : ContactPresenter {
 
     private fun parseContactInfo(barcode: Barcode): String {
         with(barcode.contactInfo) {
-            return arrayOf(name.formattedName,
-                    title,
-                    organization,
-                    phones?.takeIf { it.isNotEmpty() }?.joinToString("\n", "", "") { it.number },
-                    emails?.takeIf { it.isNotEmpty() }?.joinToString("\n", "", "") { it.address },
-                    addresses?.map { it.addressLines?.joinToString("\n", "", "") },
+            return arrayOf(name.formattedName.takeIf { it.isNotBlank() },
+                    title.takeIf { it.isNotBlank() },
+                    organization.takeIf { it.isNotBlank() },
+                    phones?.takeIf { it.isNotEmpty() }?.joinToString("", "", "") { it.number },
+                    emails?.takeIf { it.isNotEmpty() }?.joinToString("", "", "") { it.address },
+                    addresses?.map { it.addressLines?.takeIf { it.isNotEmpty() }?.joinToString(";\n", "", "") }?.joinToString(", ", "", ""),
                     urls?.joinToString("\n", "", ""))
                     .filterNotNull()
                     .joinToString("\n\n", "", "")

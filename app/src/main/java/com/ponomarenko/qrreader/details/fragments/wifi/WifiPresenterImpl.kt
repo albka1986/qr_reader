@@ -1,11 +1,7 @@
 package com.ponomarenko.qrreader.details.fragments.wifi
 
-import android.content.Context
 import android.net.wifi.WifiConfiguration
 import com.google.android.gms.vision.barcode.Barcode
-import android.content.Context.WIFI_SERVICE
-import android.net.wifi.WifiManager
-
 
 
 /**
@@ -34,7 +30,7 @@ class WifiPresenterImpl(private val barcode: Barcode) : WifiPresenter {
         val passwordTitle = "\nPassword:"
         password = barcode.wifi.password
 
-        val content = arrayOf(ssidTitle, ssid, passwordTitle.takeIf { password.isNotBlank() && password.length > 2 }, password.takeIf { it.isNotBlank() && it.length > 2 })
+        val content = arrayOf(ssidTitle, ssid, passwordTitle, password)
                 .filterNotNull()
                 .joinToString("\n", "", "")
 
@@ -54,12 +50,10 @@ class WifiPresenterImpl(private val barcode: Barcode) : WifiPresenter {
 
         val conf = WifiConfiguration()
         conf.SSID = "\"" + networkSSID + "\""
-        conf.preSharedKey = "\""+ networkPass +"\""
+        conf.preSharedKey = "\"" + networkPass + "\""
         conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
 
         wifiView?.connectWifi(conf)
-
-        TODO("not implemented - onConnectBtnPressed")
     }
 
     override fun getBarcode(): Barcode {
