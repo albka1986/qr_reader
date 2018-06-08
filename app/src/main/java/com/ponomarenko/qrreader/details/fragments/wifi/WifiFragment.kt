@@ -80,13 +80,16 @@ class WifiFragment : Fragment(), WifiView {
     }
 
     private fun checkAndRequestPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (isPermissionProvided()) {
-                wifiPresenter.onConnectBtnPressed()
-            }
-        } else {
-            wifiPresenter.onConnectBtnPressed()
-        }
+        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+             if (isPermissionProvided()) {
+                 wifiPresenter.onConnectBtnPressed()
+             }
+         } else {
+             wifiPresenter.onConnectBtnPressed()
+         }*/
+
+        requestPermissions(arrayOf(Manifest.permission.CHANGE_WIFI_STATE),CHECK_PERMISSION_WIFI_REQUEST)
+
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -117,6 +120,7 @@ class WifiFragment : Fragment(), WifiView {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CHECK_PERMISSION_WIFI_REQUEST) {
             if ((grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)) {
 //                wifiPresenter.onConnectBtnPressed()

@@ -52,6 +52,7 @@ class WifiPresenterImpl(private val barcode: Barcode) : WifiPresenter {
         conf.SSID = "\"" + networkSSID + "\""
         conf.preSharedKey = "\"" + networkPass + "\""
         conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
+        conf.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN)
 
         wifiView?.connectWifi(conf)
     }
