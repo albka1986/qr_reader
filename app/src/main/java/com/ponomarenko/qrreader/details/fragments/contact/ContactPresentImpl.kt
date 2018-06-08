@@ -22,8 +22,8 @@ class ContactPresentImpl(private var barcode: Barcode) : ContactPresenter {
         contactView?.initCall(phone)
     }
 
-    override fun bind(contactView: ContactView) {
-        this.contactView = contactView
+    override fun bind(view: ContactView?) {
+        contactView = view
     }
 
     override fun unbind() {

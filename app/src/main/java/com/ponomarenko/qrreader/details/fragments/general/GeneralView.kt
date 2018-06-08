@@ -5,4 +5,5 @@ package com.ponomarenko.qrreader.details.fragments.general
  */
 interface GeneralView {
     fun setData(text: String)
+    fun shareContent(text: String)
 }

@@ -1,5 +1,6 @@
 package com.ponomarenko.qrreader.details.fragments.general
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -24,9 +25,7 @@ class GeneralFragment : Fragment(), GeneralView {
         super.onStart()
         generalPresenter.bind(this)
         val rawData = arguments?.getString(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
-        if (rawData != null) {
-            generalPresenter.setData(rawData)
-        }
+        rawData?.let { generalPresenter.setData(rawData) }
     }
 
     override fun onStop() {
@@ -36,6 +35,14 @@ class GeneralFragment : Fragment(), GeneralView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_general, container, false)
+    }
+
+    override fun shareContent(text: String) {
+        with(Intent()) {
+            action = Intent.ACTION_SEND
+            type = getString(R.string.share_type)
+            putExtra(Intent.EXTRA_TEXT, text)
+        }.let { startActivity(Intent.createChooser(it, getString(R.string.share_title))) }
     }
 
 }
