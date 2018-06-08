@@ -19,6 +19,7 @@
         android:layout_margin="@dimen/margin_detail_info_container"
         android:lineSpacingExtra="6dp"
         android:textColor="@android:color/white"
+        android:textIsSelectable="true"
         android:textSize="@dimen/detailed_info_text_size"
         android:typeface="monospace"
         tools:text="Test" />

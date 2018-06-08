@@ -58,7 +58,7 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
 
     private fun launchGeneralFragment(barcode: Barcode) {
         val generalFragment: Fragment = GeneralFragment()
-        generalFragment.arguments = Bundle().apply { putString(ARGUMENT_DATA_KEY, barcode.displayValue) }
+        generalFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
         displayInfoView?.launchFragment(generalFragment)
     }
 }

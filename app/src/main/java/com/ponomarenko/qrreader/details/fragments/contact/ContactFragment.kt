@@ -36,7 +36,7 @@ class ContactFragment : Fragment(), ContactView {
         super.onStart()
         val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
         barcode?.let {
-            ContactPresentImpl(it)
+            contactPresenter = ContactPresentImpl(it)
             contactPresenter.bind(this)
             contactPresenter.parseBarcode()
             share_btn.setOnClickListener { contactPresenter.onShareBtnPressed() }
@@ -99,7 +99,6 @@ class ContactFragment : Fragment(), ContactView {
         intent.data = Uri.parse(getString(R.string.intent_call_type).plus(phone))
         context?.startActivity(intent)
     }
-
 
 
     override fun setData(text: String) {

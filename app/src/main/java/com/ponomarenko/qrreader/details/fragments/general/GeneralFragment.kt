@@ -6,8 +6,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
+import kotlinx.android.synthetic.main.cat_button_ll.*
 import kotlinx.android.synthetic.main.fragment_general.*
 
 /**
@@ -15,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_general.*
  */
 class GeneralFragment : Fragment(), GeneralView {
 
-    private val generalPresenter: GeneralPresenter by lazy { GeneralPresenterImpl() }
+    private lateinit var generalPresenter: GeneralPresenter
 
     override fun setData(text: String) {
         raw_value_tv.text = text
@@ -23,9 +25,14 @@ class GeneralFragment : Fragment(), GeneralView {
 
     override fun onStart() {
         super.onStart()
-        generalPresenter.bind(this)
-        val rawData = arguments?.getString(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
-        rawData?.let { generalPresenter.setData(rawData) }
+
+        val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
+        barcode?.let {
+            generalPresenter = GeneralPresenterImpl(it)
+            generalPresenter.bind(this)
+            generalPresenter.parseBarcode()
+            share_btn.setOnClickListener { generalPresenter.onShareBtnPressed() }
+        }
     }
 
     override fun onStop() {

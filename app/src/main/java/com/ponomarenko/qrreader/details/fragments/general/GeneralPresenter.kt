@@ -6,5 +6,6 @@ package com.ponomarenko.qrreader.details.fragments.general
 interface GeneralPresenter {
     fun bind(generalView: GeneralView)
     fun unbind()
-    fun setData(rawData: String)
+    fun parseBarcode()
+    fun onShareBtnPressed()
 }
