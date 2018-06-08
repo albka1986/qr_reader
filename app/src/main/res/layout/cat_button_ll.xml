@@ -43,10 +43,16 @@
             android:src="@drawable/ic_browser" />
 
         <ImageButton
+            android:id="@+id/wifi_btn"
+            style="@style/ButtonCatStyle"
+            android:src="@drawable/ic_connection" />
+
+        <ImageButton
             android:id="@+id/share_btn"
             style="@style/ButtonCatStyle"
             android:src="@drawable/ic_share"
             android:visibility="visible" />
+
 
     </LinearLayout>
 

@@ -6,6 +6,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.details.fragments.contact.ContactFragment
 import com.ponomarenko.qrreader.details.fragments.general.GeneralFragment
 import com.ponomarenko.qrreader.details.fragments.url.UrlFragment
+import com.ponomarenko.qrreader.details.fragments.wifi.WifiFragment
 
 /**
  * Created by Ponomarenko Oleh on 31.05.2018.
@@ -30,11 +31,11 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
         when {
             barcode.contactInfo != null -> launchContactFragment(barcode)
             barcode.url != null -> launchUrlFragment(barcode)
+            barcode.wifi != null -> launchWifiFragment(barcode)
 
 //          barcode.email != null -> BarcodeType.EMAIL
 //          barcode.phone != null -> BarcodeType.PHONE
 //          barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
-//          barcode.ic_wifi != null -> BarcodeType.WIFI
 //          barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
 //          barcode.geoPoint != null -> BarcodeType.GEO_POINT
 
@@ -42,6 +43,12 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
                 launchGeneralFragment(barcode)
             }
         }
+    }
+
+    private fun launchWifiFragment(barcode: Barcode) {
+        val wifFragment = WifiFragment()
+        wifFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
+        displayInfoView?.launchFragment(wifFragment)
     }
 
     private fun launchUrlFragment(barcode: Barcode) {

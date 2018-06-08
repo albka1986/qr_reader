@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#414141"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/FragmentHeaderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragment_header_height"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_wifi" />
+
+        <TextView
+            android:id="@+id/header_title"
+            style="@style/FragmentHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_wifi_header_title" />
+
+    </LinearLayout>
+
+    <include layout="@layout/cat_button_ll" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/detail_container_ll" />
+
+    </ScrollView>
+
+
+</LinearLayout>
