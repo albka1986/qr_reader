@@ -45,6 +45,5 @@ class EmailPresenterImpl(private val barcode: Barcode) : EmailPresenter {
         } else {
             emailView?.setEmailBtnVisible(true)
         }
-
     }
 }

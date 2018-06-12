@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
  */
 class EmailFragment : Fragment(), EmailView {
 
-
     private lateinit var emailPresenter: EmailPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,6 +66,4 @@ class EmailFragment : Fragment(), EmailView {
         emailIntent.putExtra(Intent.EXTRA_TEXT, email.body)
         startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_title)))
     }
-
-
 }
