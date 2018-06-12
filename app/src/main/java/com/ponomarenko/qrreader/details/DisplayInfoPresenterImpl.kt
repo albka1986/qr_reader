@@ -38,7 +38,6 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
             barcode.phone != null -> displayInfoView?.launchFragment(PhoneFragment(), barcode)
 
 //          barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
-//          barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
 
             else -> {
                 displayInfoView?.launchFragment(GeneralFragment(), barcode)

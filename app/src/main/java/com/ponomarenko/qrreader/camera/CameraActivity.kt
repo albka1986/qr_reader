@@ -72,6 +72,7 @@ class CameraActivity : Activity() {
         val barcodeList: SparseArray<Barcode> = detections!!.detectedItems
         if (barcodeList.size() != 0) {
             val intent = DisplayInfoActivity.getIntent(this)
+            intent.removeExtra(BARCODE_KEY)
             intent.putExtra(BARCODE_KEY, barcodeList.valueAt(0))
             startActivity(intent)
 

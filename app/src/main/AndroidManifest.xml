@@ -33,7 +33,6 @@
 
         <activity
             android:name="com.ponomarenko.qrreader.details.DisplayInfoActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
 
     </application>
