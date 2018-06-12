@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.details.fragments.contact.ContactFragment
+import com.ponomarenko.qrreader.details.fragments.email.EmailFragment
 import com.ponomarenko.qrreader.details.fragments.general.GeneralFragment
 import com.ponomarenko.qrreader.details.fragments.url.UrlFragment
 import com.ponomarenko.qrreader.details.fragments.wifi.WifiFragment
@@ -32,6 +33,7 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
             barcode.contactInfo != null -> launchContactFragment(barcode)
             barcode.url != null -> launchUrlFragment(barcode)
             barcode.wifi != null -> launchWifiFragment(barcode)
+            barcode.email != null -> launchEmailFragment(barcode)
 
 //          barcode.email != null -> BarcodeType.EMAIL
 //          barcode.phone != null -> BarcodeType.PHONE
@@ -43,6 +45,12 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
                 launchGeneralFragment(barcode)
             }
         }
+    }
+
+    private fun launchEmailFragment(barcode: Barcode) {
+        val emailFragment = EmailFragment()
+        emailFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
+        displayInfoView?.launchFragment(emailFragment)
     }
 
     private fun launchWifiFragment(barcode: Barcode) {

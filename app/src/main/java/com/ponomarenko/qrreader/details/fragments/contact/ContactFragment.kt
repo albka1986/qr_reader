@@ -32,6 +32,10 @@ class ContactFragment : Fragment(), ContactView {
 
     private lateinit var contactPresenter: ContactPresenter
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_contact, container, false)
+    }
+
     override fun onStart() {
         super.onStart()
         val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
@@ -48,9 +52,6 @@ class ContactFragment : Fragment(), ContactView {
         contactPresenter.unbind()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_contact, container, false)
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == CHECK_PERMISSION_CALL_REQUEST) {
