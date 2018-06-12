@@ -5,7 +5,7 @@ import com.google.android.gms.vision.barcode.Barcode
 
 interface ContactView {
 
-    fun setData(text: String)
+    fun setData(content: String)
 
     fun initCall(phone: String)
 

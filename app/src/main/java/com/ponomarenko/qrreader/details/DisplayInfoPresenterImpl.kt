@@ -5,6 +5,7 @@ import com.ponomarenko.qrreader.details.fragments.contact.ContactFragment
 import com.ponomarenko.qrreader.details.fragments.email.EmailFragment
 import com.ponomarenko.qrreader.details.fragments.general.GeneralFragment
 import com.ponomarenko.qrreader.details.fragments.geo.GeoFragment
+import com.ponomarenko.qrreader.details.fragments.phone.PhoneFragment
 import com.ponomarenko.qrreader.details.fragments.url.UrlFragment
 import com.ponomarenko.qrreader.details.fragments.wifi.WifiFragment
 
@@ -34,9 +35,8 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
             barcode.email != null -> displayInfoView?.launchFragment(EmailFragment(), barcode)
             barcode.geoPoint != null -> displayInfoView?.launchFragment(GeoFragment(), barcode)
             barcode.url != null -> displayInfoView?.launchFragment(UrlFragment(), barcode)
+            barcode.phone != null -> displayInfoView?.launchFragment(PhoneFragment(), barcode)
 
-
-//          barcode.phone != null -> BarcodeType.PHONE
 //          barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
 //          barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
 
