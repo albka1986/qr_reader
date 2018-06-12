@@ -5,7 +5,6 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.details.fragments.contact.ContactPresentImpl
 import java.util.regex.Pattern
 
-
 /**
  * Created by Ponomarenko Oleh on 5/31/2018.
  */

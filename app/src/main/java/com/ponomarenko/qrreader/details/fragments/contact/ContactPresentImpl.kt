@@ -17,7 +17,6 @@ class ContactPresentImpl(private var barcode: Barcode) : ContactPresenter {
 
     private var contactView: ContactView? = null
 
-
     override fun onCallBtnPressed(phone: String) {
         contactView?.initCall(phone)
     }

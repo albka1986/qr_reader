@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
  */
 class GeoFragment : Fragment(), GeoView {
 
-
     lateinit var presenter: GeoPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,7 +39,6 @@ class GeoFragment : Fragment(), GeoView {
         super.onStop()
         presenter.unbind()
     }
-
 
     override fun setMapBtnVisible(visible: Boolean) {
         map_btn.setVisible(visible)

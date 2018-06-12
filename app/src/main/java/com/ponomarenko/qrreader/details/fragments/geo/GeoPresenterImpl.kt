@@ -61,5 +61,4 @@ class GeoPresenterImpl(private val barcode: Barcode) : GeoPresenter {
         geoView?.openGoogleMaps(uri)
     }
 
-
 }
