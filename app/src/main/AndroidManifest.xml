@@ -11,6 +11,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.wifi" />
 
     <application
         android:allowBackup="true"

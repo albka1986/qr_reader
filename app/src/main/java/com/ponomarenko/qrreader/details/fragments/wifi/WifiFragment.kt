@@ -1,15 +1,14 @@
 package com.ponomarenko.qrreader.details.fragments.wifi
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context.WIFI_SERVICE
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,25 +26,27 @@ import kotlinx.android.synthetic.main.detail_container_ll.*
  */
 class WifiFragment : Fragment(), WifiView {
 
+
     companion object {
         const val CHECK_PERMISSION_WIFI_REQUEST: Int = 203
     }
 
-    @SuppressLint("WifiManagerLeak")
     override fun connectWifi(conf: WifiConfiguration) {
-        val wifiManager = requireContext().getSystemService(WIFI_SERVICE) as WifiManager
+        val wifiManager = activity?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
         wifiManager.addNetwork(conf)
 
         val list = wifiManager.configuredNetworks
         for (i in list) {
             if (i.SSID != null && i.SSID == "\"" + conf.SSID + "\"") {
+                wifiManager.isWifiEnabled = true
                 wifiManager.disconnect()
                 wifiManager.enableNetwork(i.networkId, true)
                 wifiManager.reconnect()
-
                 break
             }
         }
+
+
     }
 
     private lateinit var wifiPresenter: WifiPresenter
@@ -80,35 +81,31 @@ class WifiFragment : Fragment(), WifiView {
     }
 
     private fun checkAndRequestPermissions() {
-        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-             if (isPermissionProvided()) {
-                 wifiPresenter.onConnectBtnPressed()
-             }
-         } else {
-             wifiPresenter.onConnectBtnPressed()
-         }*/
-
-        requestPermissions(arrayOf(Manifest.permission.CHANGE_WIFI_STATE),CHECK_PERMISSION_WIFI_REQUEST)
+        if (isPermissionProvided()) {
+            wifiPresenter.onConnectBtnPressed()
+        }
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun isPermissionProvided(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val listPermissionsNeeded = ArrayList<String>()
 
-        val listPermissionsNeeded = ArrayList<String>()
+            if (activity?.checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.ACCESS_WIFI_STATE)
+            }
+            if (activity?.checkSelfPermission(Manifest.permission.CHANGE_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.CHANGE_WIFI_STATE)
+            }
 
-        if (activity?.checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_WIFI_STATE)
+            if (!listPermissionsNeeded.isEmpty()) {
+                requestPermissions(listPermissionsNeeded.toTypedArray(), CHECK_PERMISSION_WIFI_REQUEST)
+                return false
+            }
+            return true
+        } else {
+            return true
         }
-        if (activity?.checkSelfPermission(Manifest.permission.CHANGE_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.CHANGE_WIFI_STATE)
-        }
-
-        if (!listPermissionsNeeded.isEmpty()) {
-            requestPermissions(arrayOf(android.Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_WIFI_STATE), CHECK_PERMISSION_WIFI_REQUEST)
-            return false
-        }
-        return true
     }
 
     override fun shareContent(content: String) {
@@ -123,12 +120,9 @@ class WifiFragment : Fragment(), WifiView {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CHECK_PERMISSION_WIFI_REQUEST) {
             if ((grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)) {
-//                wifiPresenter.onConnectBtnPressed()
+                wifiPresenter.onConnectBtnPressed()
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 }
