@@ -10,7 +10,7 @@ import com.google.android.gms.vision.barcode.Barcode
 class ContactPresentImpl(private var barcode: Barcode) : ContactPresenter {
 
     companion object {
-        const val GOOGLE_MAP_URL = "http://maps.google.co.in/maps?q="
+        const val GOOGLE_MAP_URL = "https://www.google.com/maps/search/?api=1&query="
         const val HTTP = "http://"
         const val HTTPS = "https://"
     }

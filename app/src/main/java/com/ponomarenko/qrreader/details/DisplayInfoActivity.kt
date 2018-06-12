@@ -43,7 +43,8 @@ class DisplayInfoActivity : AppCompatActivity(), DisplayInfoView {
         finish()
     }
 
-    override fun launchFragment(fragment: Fragment) {
+    override fun launchFragment(fragment: Fragment, barcode: Barcode) {
+        fragment.arguments = Bundle().apply { putParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY, barcode) }
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit()

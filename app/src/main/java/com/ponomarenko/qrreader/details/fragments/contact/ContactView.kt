@@ -9,7 +9,7 @@ interface ContactView {
 
     fun initCall(phone: String)
 
-    fun shareContent(text: String)
+    fun shareContent(content: String)
 
     fun addContact(contactInfo: Barcode.ContactInfo)
 

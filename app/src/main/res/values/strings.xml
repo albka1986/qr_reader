@@ -25,4 +25,5 @@
     <string name="choose_number_dialog_title">Choose number</string>
     <string name="fragment_wifi_header_title">Wi-Fi</string>
     <string name="fragment_title_email">E-mail</string>
+    <string name="fragment_title_address">Address</string>
 </resources>

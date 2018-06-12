@@ -1,11 +1,10 @@
 package com.ponomarenko.qrreader.details
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.details.fragments.contact.ContactFragment
 import com.ponomarenko.qrreader.details.fragments.email.EmailFragment
 import com.ponomarenko.qrreader.details.fragments.general.GeneralFragment
+import com.ponomarenko.qrreader.details.fragments.geo.GeoFragment
 import com.ponomarenko.qrreader.details.fragments.url.UrlFragment
 import com.ponomarenko.qrreader.details.fragments.wifi.WifiFragment
 
@@ -30,50 +29,22 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
 
     override fun detectFragment(barcode: Barcode) {
         when {
-            barcode.contactInfo != null -> launchContactFragment(barcode)
-            barcode.url != null -> launchUrlFragment(barcode)
-            barcode.wifi != null -> launchWifiFragment(barcode)
-            barcode.email != null -> launchEmailFragment(barcode)
+            barcode.contactInfo != null -> displayInfoView?.launchFragment(ContactFragment(), barcode)
+            barcode.wifi != null -> displayInfoView?.launchFragment(WifiFragment(), barcode)
+            barcode.email != null -> displayInfoView?.launchFragment(EmailFragment(), barcode)
+            barcode.geoPoint != null -> displayInfoView?.launchFragment(GeoFragment(), barcode)
+            barcode.url != null -> displayInfoView?.launchFragment(UrlFragment(), barcode)
 
-//          barcode.email != null -> BarcodeType.EMAIL
+
 //          barcode.phone != null -> BarcodeType.PHONE
 //          barcode.calendarEvent != null -> BarcodeType.CALENDAR_EVENT
 //          barcode.driverLicense != null -> BarcodeType.DRIVER_LICENSE
-//          barcode.geoPoint != null -> BarcodeType.GEO_POINT
 
             else -> {
-                launchGeneralFragment(barcode)
+                displayInfoView?.launchFragment(GeneralFragment(), barcode)
             }
         }
     }
 
-    private fun launchEmailFragment(barcode: Barcode) {
-        val emailFragment = EmailFragment()
-        emailFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
-        displayInfoView?.launchFragment(emailFragment)
-    }
 
-    private fun launchWifiFragment(barcode: Barcode) {
-        val wifFragment = WifiFragment()
-        wifFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
-        displayInfoView?.launchFragment(wifFragment)
-    }
-
-    private fun launchUrlFragment(barcode: Barcode) {
-        val urlFragment = UrlFragment()
-        urlFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
-        displayInfoView?.launchFragment(urlFragment)
-    }
-
-    private fun launchContactFragment(barcode: Barcode) {
-        val contactFragment: Fragment = ContactFragment()
-        contactFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
-        displayInfoView?.launchFragment(contactFragment)
-    }
-
-    private fun launchGeneralFragment(barcode: Barcode) {
-        val generalFragment: Fragment = GeneralFragment()
-        generalFragment.arguments = Bundle().apply { putParcelable(ARGUMENT_DATA_KEY, barcode) }
-        displayInfoView?.launchFragment(generalFragment)
-    }
 }

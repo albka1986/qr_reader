@@ -106,11 +106,11 @@ class ContactFragment : Fragment(), ContactView {
         detail_info_container_tv.text = text
     }
 
-    override fun shareContent(text: String) {
+    override fun shareContent(content: String) {
         with(Intent()) {
             action = Intent.ACTION_SEND
             type = getString(R.string.share_type)
-            putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_TEXT, content)
         }.let { startActivity(Intent.createChooser(it, getString(R.string.share_title))) }
     }
 
