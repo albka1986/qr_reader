@@ -22,6 +22,26 @@ class UrlFragment : Fragment(), UrlView {
 
     private lateinit var urlPresenter: UrlPresenter
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_url, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
+        barcode?.let {
+            urlPresenter = UrlPresenterImpl(it)
+            urlPresenter.bind(this)
+            urlPresenter.parseBarcode()
+            share_btn.setOnClickListener { urlPresenter.onShareBtnPressed() }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        urlPresenter.unbind()
+    }
+
     override fun setBrowserBtnVisible(visible: Boolean) {
         browser_btn.setVisible(visible)
         if (visible) {
@@ -45,25 +65,5 @@ class UrlFragment : Fragment(), UrlView {
 
     override fun setData(detailedInfoText: String) {
         detail_info_container_tv.text = detailedInfoText
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val barcode: Barcode? = arguments?.getParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY)
-        barcode?.let {
-            urlPresenter = UrlPresenterImpl(it)
-            urlPresenter.bind(this)
-            urlPresenter.parseBarcode()
-            share_btn.setOnClickListener { urlPresenter.onShareBtnPressed() }
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        urlPresenter.unbind()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_url, container, false)
     }
 }
