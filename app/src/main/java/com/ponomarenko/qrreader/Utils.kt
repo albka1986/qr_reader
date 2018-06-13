@@ -17,45 +17,27 @@ fun View?.setVisible(visible: Boolean) {
     this?.visibility = if (visible) View.VISIBLE else View.GONE
 }
 
-fun Activity?.checkPermissions(array: Array<String>): Boolean {
-
+fun Activity.checkPermissions(array: Array<String>): Boolean {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-        val requestPermissionList = ArrayList<String>()
-
-        array.forEach {
-            if (this?.checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionList.add(it)
-            }
-        }
-
-        return if (requestPermissionList.isEmpty()) {
-            true
-        } else {
-            this?.requestPermissions(array, PERMISSION_REQUEST_CODE)
-            false
+        array.filter {
+            this.checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
+        }.takeIf { it.isNotEmpty() }?.let {
+            requestPermissions(it.toTypedArray(), PERMISSION_REQUEST_CODE)
+            return false
         }
     }
-
     return true
 }
 
+
 fun Fragment.checkPermissions(array: Array<String>): Boolean {
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-        val requestPermissionList =
-                array.filter {
-                    ActivityCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
-                }
-
-        return if (requestPermissionList.isEmpty()) {
-            true
-        } else {
-            this.requestPermissions(requestPermissionList.toTypedArray(), PERMISSION_REQUEST_CODE)
-            false
+        array.filter {
+            ActivityCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+        }.takeIf { it.isNotEmpty() }?.let {
+            this.requestPermissions(it.toTypedArray(), PERMISSION_REQUEST_CODE)
+            return false
         }
     }
-
     return true
 }

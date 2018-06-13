@@ -78,8 +78,7 @@ class WifiFragment : Fragment(), WifiView {
     }
 
     private fun isPermissionProvided(): Boolean {
-        val isPermissionProvided = checkPermissions(arrayOf(android.Manifest.permission.ACCESS_WIFI_STATE, android.Manifest.permission.CHANGE_WIFI_STATE, android.Manifest.permission.INTERNET, android.Manifest.permission.ACCESS_FINE_LOCATION))
-        isPermissionProvided.let { return it }
+        return checkPermissions(arrayOf(android.Manifest.permission.ACCESS_WIFI_STATE, android.Manifest.permission.CHANGE_WIFI_STATE, android.Manifest.permission.INTERNET, android.Manifest.permission.ACCESS_FINE_LOCATION))
     }
 
     override fun shareContent(content: String) {
