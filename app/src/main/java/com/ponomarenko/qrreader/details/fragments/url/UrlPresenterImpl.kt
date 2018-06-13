@@ -47,10 +47,17 @@ class UrlPresenterImpl(private var barcode: Barcode) : UrlPresenter {
 
     override fun parseBarcode() {
         val text = parseUrl()
-        text?.takeIf { it.isNotEmpty() }?.let {
-            urlView?.setData(it)
-            checkAvailableButtons(it)
+
+        text?.let {
+            if (it.isNotEmpty()) {
+                urlView?.setData(it)
+                checkAvailableButtons(it)
+            } else {
+                urlView?.setData(barcode.rawValue)
+            }
         }
+
+
     }
 
     private fun parseUrl(): String? {

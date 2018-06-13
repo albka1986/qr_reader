@@ -29,7 +29,7 @@ class DisplayInfoPresenterImpl : DisplayInfoPresenter {
     }
 
     override fun detectFragment(barcode: Barcode) {
-        when {
+            when {
             barcode.contactInfo != null -> displayInfoView?.launchFragment(ContactFragment(), barcode)
             barcode.wifi != null -> displayInfoView?.launchFragment(WifiFragment(), barcode)
             barcode.email != null -> displayInfoView?.launchFragment(EmailFragment(), barcode)

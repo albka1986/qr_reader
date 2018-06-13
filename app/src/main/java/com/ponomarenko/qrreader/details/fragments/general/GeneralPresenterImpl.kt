@@ -10,7 +10,7 @@ class GeneralPresenterImpl(private val barcode: Barcode) : GeneralPresenter {
     private var generalView: GeneralView? = null
 
     override fun parseBarcode() {
-        generalView?.setData(barcode.displayValue)
+        generalView?.setData(barcode.rawValue)
     }
 
     override fun bind(generalView: GeneralView) {
