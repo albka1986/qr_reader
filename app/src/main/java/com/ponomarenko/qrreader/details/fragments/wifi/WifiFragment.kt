@@ -28,12 +28,11 @@ class WifiFragment : Fragment(), WifiView {
         val wifiManager = activity?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
         wifiManager.addNetwork(conf)
         wifiManager.isWifiEnabled = true
+        wifiManager.disconnect()
 
         val list = wifiManager.configuredNetworks
         for (i in list) {
             if (i.SSID != null && i.SSID == "\"" + conf.SSID + "\"") {
-                wifiManager.isWifiEnabled = true
-                wifiManager.disconnect()
                 wifiManager.enableNetwork(i.networkId, true)
                 wifiManager.reconnect()
                 break
@@ -79,9 +78,8 @@ class WifiFragment : Fragment(), WifiView {
     }
 
     private fun isPermissionProvided(): Boolean {
-        val isPermissionProvided = activity?.checkPermissions(arrayOf(android.Manifest.permission.ACCESS_WIFI_STATE, android.Manifest.permission.CHANGE_WIFI_STATE, android.Manifest.permission.INTERNET, android.Manifest.permission.ACCESS_FINE_LOCATION))
-        isPermissionProvided?.let { return it }
-        return false
+        val isPermissionProvided = checkPermissions(arrayOf(android.Manifest.permission.ACCESS_WIFI_STATE, android.Manifest.permission.CHANGE_WIFI_STATE, android.Manifest.permission.INTERNET, android.Manifest.permission.ACCESS_FINE_LOCATION))
+        isPermissionProvided.let { return it }
     }
 
     override fun shareContent(content: String) {
@@ -99,5 +97,4 @@ class WifiFragment : Fragment(), WifiView {
             }
         }
     }
-
 }

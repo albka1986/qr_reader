@@ -15,7 +15,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.ponomarenko.qrreader.PERMISSION_REQUEST_CODE
 import com.ponomarenko.qrreader.R
-import com.ponomarenko.qrreader.checkPermissions
+import com.ponomarenko.qrreader.    checkPermissions
 import com.ponomarenko.qrreader.details.DisplayInfoActivity
 import kotlinx.android.synthetic.main.activity_camera.*
 
