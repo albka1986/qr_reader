@@ -1,13 +1,10 @@
 package com.ponomarenko.qrreader.camera
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
@@ -17,6 +14,7 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.ponomarenko.qrreader.R
+import com.ponomarenko.qrreader.checkPermissions
 import com.ponomarenko.qrreader.details.DisplayInfoActivity
 import kotlinx.android.synthetic.main.activity_camera.*
 
@@ -34,7 +32,7 @@ class CameraActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
-        checkPermissions()
+        checkPermission()
 
         val barcodeDetector = BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build()
         barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
@@ -84,16 +82,8 @@ class CameraActivity : Activity() {
         surfaceView.visibility = View.VISIBLE
     }
 
-    private fun checkPermissions() {
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(arrayOf(Manifest.permission.CAMERA), CHECK_PERMISSION_CAMERA_REQUEST)
-            } else {
-                runCamera()
-            }
-        } else {
+    private fun checkPermission() {
+        if (this.checkPermissions(arrayOf(android.Manifest.permission.CAMERA))) {
             runCamera()
         }
     }
