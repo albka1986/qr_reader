@@ -13,6 +13,7 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
+import com.ponomarenko.qrreader.PERMISSION_REQUEST_CODE
 import com.ponomarenko.qrreader.R
 import com.ponomarenko.qrreader.checkPermissions
 import com.ponomarenko.qrreader.details.DisplayInfoActivity
@@ -22,7 +23,6 @@ class CameraActivity : Activity() {
 
     companion object {
         const val BARCODE_KEY: String = "barcodeIntentKey"
-        const val CHECK_PERMISSION_CAMERA_REQUEST = 200
         fun getIntent(context: Context) = Intent(context, CameraActivity::class.java)
     }
 
@@ -32,8 +32,15 @@ class CameraActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
-        checkPermission()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkPermission()
+    }
+
+    private fun launchBarcodeDetector() {
         val barcodeDetector = BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build()
         barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
             override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
@@ -79,6 +86,7 @@ class CameraActivity : Activity() {
     }
 
     private fun runCamera() {
+        launchBarcodeDetector()
         surfaceView.visibility = View.VISIBLE
     }
 
@@ -90,7 +98,7 @@ class CameraActivity : Activity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            CHECK_PERMISSION_CAMERA_REQUEST -> {
+            PERMISSION_REQUEST_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)) {
                     runCamera()
                 } else {
