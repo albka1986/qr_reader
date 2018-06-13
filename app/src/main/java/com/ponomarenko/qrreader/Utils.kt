@@ -40,24 +40,19 @@ fun Activity?.checkPermissions(array: Array<String>): Boolean {
     return true
 }
 
-fun Fragment?.checkPermissions(array: Array<String>): Boolean {
+fun Fragment.checkPermissions(array: Array<String>): Boolean {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-        val requestPermissionList = ArrayList<String>()
-
-        array.forEach {
-            this?.requireContext()?.let { context ->
-                if (ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissionList.add(it)
+        val requestPermissionList =
+                array.filter {
+                    ActivityCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
                 }
-            }
-        }
 
         return if (requestPermissionList.isEmpty()) {
             true
         } else {
-            this?.requestPermissions(array, PERMISSION_REQUEST_CODE)
+            this.requestPermissions(requestPermissionList.toTypedArray(), PERMISSION_REQUEST_CODE)
             false
         }
     }
