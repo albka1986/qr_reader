@@ -102,8 +102,8 @@ class ContactFragment : Fragment(), ContactView {
     }
 
 
-    override fun setData(text: String) {
-        detail_info_container_tv.text = text
+    override fun setData(content: String) {
+        detail_info_container_tv.text = content
     }
 
     override fun shareContent(content: String) {

@@ -25,6 +25,7 @@ class DisplayInfoActivity : AppCompatActivity(), DisplayInfoView {
         setContentView(R.layout.activity_display_info)
         take_new_qr_btn.setOnClickListener { takeNewQR() }
         barcode = intent.extras.getParcelable(CameraActivity.BARCODE_KEY)
+
     }
 
     override fun onStart() {

@@ -24,7 +24,6 @@
 
         <activity
             android:name="com.ponomarenko.qrreader.camera.CameraActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +33,6 @@
 
         <activity
             android:name="com.ponomarenko.qrreader.details.DisplayInfoActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
 
     </application>

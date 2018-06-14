@@ -79,6 +79,7 @@ class CameraActivity : Activity() {
             val intent = DisplayInfoActivity.getIntent(this)
             intent.removeExtra(BARCODE_KEY)
             intent.putExtra(BARCODE_KEY, barcodeList.valueAt(0))
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
 
             Log.d(tag, barcodeList.valueAt(0).rawValue)
