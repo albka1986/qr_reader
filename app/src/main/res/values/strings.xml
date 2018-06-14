@@ -1,30 +1,18 @@
 <resources>
     <string name="app_name">QR Reader</string>
-    <string name="error_not_found">Could not set up the detector!</string>
-    <string name="btn_browse">Browse website</string>
-    <string name="btn_copy">Copy</string>
-    <string name="btn_share">Share</string>
     <string name="menu_share">Share the app</string>
     <string name="menu_feedback">Send feedback</string>
-    <string name="main_title">Information from the code:</string>
-    <string name="toast_data_copied">Copied to clipboard</string>
-    <string name="toast_url_not_found">No URL was found</string>
-    <string name="feedback_email">mailto: albka1986@gmail.com</string>
-    <string name="feedback_decription">Send message to admin via:</string>
-    <string name="play_store_url">https://play.google.com/store/apps/details?id=</string>
-    <string name="share_app_title">Share</string>
-    <string name="intent_type">text/plain</string>
     <string name="fragment_title_contact">Contact</string>
-    <string name="fragment_title_url">Web-site</string>
+    <string name="fragment_title_url" translatable="false">Web-site</string>
     <string name="share_title">Send via</string>
-    <string name="share_type">text/plain</string>
+    <string name="share_type" translatable="false">text/plain</string>
     <string name="choose_email_title">Choose email</string>
-    <string name="send_email_scheme">mailto</string>
-    <string name="send_email_title">Send email...</string>
-    <string name="intent_call_type">tel:</string>
+    <string name="send_email_scheme" translatable="false">mailto</string>
+    <string name="send_email_title">Send email…</string>
+    <string name="intent_call_type" translatable="false">tel:</string>
     <string name="choose_number_dialog_title">Choose number</string>
-    <string name="fragment_wifi_header_title">Wi-Fi</string>
-    <string name="fragment_title_email">E-mail</string>
+    <string name="fragment_wifi_header_title" translatable="false">Wi-Fi</string>
+    <string name="fragment_title_email" translatable="false">E-mail</string>
     <string name="fragment_title_address">Address</string>
     <string name="fragment_title_phone">Phone</string>
 </resources>

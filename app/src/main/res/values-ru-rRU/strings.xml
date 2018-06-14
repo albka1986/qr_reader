@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QR Reader</string>
+    <string name="share_title">Отправить с помощью</string>
+    <string name="share_app_title">Поделиться</string>
+    <string name="fragment_title_contact" translatable="false">Контакт</string>
+    <string name="feedback_description" translatable="false">Отправить сообщение админитсратору</string>
+    <string name="toast_url_not_found">АдресВеб-адрес не найден</string>
+    <string name="toast_data_copied">Скопировано в буфер обмена</string>
+    <string name="btn_browse" translatable="false">Открыть в браузере</string>
+    <string name="btn_share">Поделиться</string>
+    <string name="menu_share">Отправить ссылку на приложение</string>
+    <string name="menu_feedback">Оставить отзыв</string>
+    <string name="main_title">Информация</string>
+    <string name="choose_email_title">Выберите e-mail</string>
+    <string name="send_email_title">Отправить email</string>
+    <string name="choose_number_dialog_title">Выберите номер</string>
+    <string name="fragment_title_address">Адрес</string>
+    <string name="fragment_title_phone">Телефон</string>
+</resources>
