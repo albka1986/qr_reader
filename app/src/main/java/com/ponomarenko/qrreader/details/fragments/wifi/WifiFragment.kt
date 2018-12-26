@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
