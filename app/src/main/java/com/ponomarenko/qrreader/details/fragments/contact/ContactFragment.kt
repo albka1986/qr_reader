@@ -3,19 +3,18 @@ package com.ponomarenko.qrreader.details.fragments.contact
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.Fragment
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
-import com.ponomarenko.qrreader.checkPermissions
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
 import com.ponomarenko.qrreader.setVisible
 import kotlinx.android.synthetic.main.cat_button_ll.*
@@ -99,7 +98,7 @@ class ContactFragment : Fragment(), ContactView {
     override fun initCall(phone: String) {
         val intent = Intent(Intent.ACTION_CALL)
         intent.data = Uri.parse(getString(R.string.intent_call_type).plus(phone))
-        context?.startActivity(intent)
+        startActivity(intent)
     }
 
 
@@ -108,11 +107,11 @@ class ContactFragment : Fragment(), ContactView {
     }
 
     override fun shareContent(content: String) {
-        with(Intent()) {
+        startActivity(Intent.createChooser(with(Intent()) {
             action = Intent.ACTION_SEND
             type = getString(R.string.share_type)
             putExtra(Intent.EXTRA_TEXT, content)
-        }.let { startActivity(Intent.createChooser(it, getString(R.string.share_title))) }
+        }, getString(R.string.share_title)))
     }
 
     override fun openBrowser(url: Uri) {
@@ -159,17 +158,17 @@ class ContactFragment : Fragment(), ContactView {
                 val phonesItems = mutableListOf<String>()
                 phones.forEach { phone -> phonesItems.add(phone.number) }
 
-                AlertDialog.Builder(requireContext()).apply {
+                AlertDialog.Builder(context).apply {
                     setTitle(getString(R.string.choose_number_dialog_title))
-                    setItems(phonesItems.toTypedArray(), { dialog, which ->
+                    setItems(phonesItems.toTypedArray()) { dialog, which ->
                         dialog.dismiss()
                         contactPresenter.onCallBtnPressed(phones[which].number)
-                    })
+                    }
                     show()
                 }
             }
         }
-
+        activity.checkSelfPermission()
     }
 
     private fun chooseEmail(emails: Array<out Barcode.Email>?) {
@@ -184,12 +183,12 @@ class ContactFragment : Fragment(), ContactView {
 
         emails.forEach { email -> emailItems.add(email.address) }
 
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(context)
         builder.setTitle(getString(R.string.choose_email_title))
-        builder.setItems(emailItems.toTypedArray(), { dialog, which ->
+        builder.setItems(emailItems.toTypedArray()) { dialog, which ->
             dialog.dismiss()
             sendEmail(emails[which])
-        })
+        }
         builder.show()
     }
 

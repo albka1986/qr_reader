@@ -56,19 +56,20 @@ class CameraActivity : Activity() {
                 .build()
 
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-            }
-
-            override fun surfaceDestroyed(holder: SurfaceHolder?) {
-                cameraSource.stop()
-            }
-
-            override fun surfaceCreated(holder: SurfaceHolder?) {
+            override fun surfaceCreated(p0: SurfaceHolder) {
                 try {
                     cameraSource.start(surfaceView.holder)
                 } catch (e: SecurityException) {
-                    Log.e(tag, e.message)
+                    Log.e(tag, e.message ?: "Unexpected error")
                 }
+            }
+
+            override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
+                //no opt
+            }
+
+            override fun surfaceDestroyed(p0: SurfaceHolder) {
+                cameraSource.stop()
             }
         })
     }

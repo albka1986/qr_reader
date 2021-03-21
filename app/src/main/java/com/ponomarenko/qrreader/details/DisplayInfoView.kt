@@ -1,6 +1,6 @@
 package com.ponomarenko.qrreader.details
 
-import androidx.fragment.app.Fragment
+import android.app.Fragment
 import com.google.android.gms.vision.barcode.Barcode
 
 /**

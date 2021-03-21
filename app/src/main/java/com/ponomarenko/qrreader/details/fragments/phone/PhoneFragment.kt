@@ -2,13 +2,13 @@ package com.ponomarenko.qrreader.details.fragments.phone
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Fragment
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

@@ -1,16 +1,16 @@
 package com.ponomarenko.qrreader.details
 
+import android.app.Activity
+import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.R
 import com.ponomarenko.qrreader.camera.CameraActivity
 import kotlinx.android.synthetic.main.activity_display_info.*
 
-class DisplayInfoActivity : AppCompatActivity(), DisplayInfoView {
+class DisplayInfoActivity : Activity(), DisplayInfoView {
 
     companion object {
         fun getIntent(context: Context) = Intent(context, DisplayInfoActivity::class.java)
@@ -46,7 +46,7 @@ class DisplayInfoActivity : AppCompatActivity(), DisplayInfoView {
 
     override fun launchFragment(fragment: Fragment, barcode: Barcode) {
         fragment.arguments = Bundle().apply { putParcelable(DisplayInfoPresenterImpl.ARGUMENT_DATA_KEY, barcode) }
-        supportFragmentManager.beginTransaction()
+        fragmentManager.beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit()
     }

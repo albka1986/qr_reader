@@ -1,19 +1,18 @@
 package com.ponomarenko.qrreader.details.fragments.wifi
 
+import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.vision.barcode.Barcode
 import com.ponomarenko.qrreader.PERMISSION_REQUEST_CODE
 import com.ponomarenko.qrreader.R
-import com.ponomarenko.qrreader.checkPermissions
 import com.ponomarenko.qrreader.details.DisplayInfoPresenterImpl
 import com.ponomarenko.qrreader.setVisible
 import kotlinx.android.synthetic.main.cat_button_ll.*

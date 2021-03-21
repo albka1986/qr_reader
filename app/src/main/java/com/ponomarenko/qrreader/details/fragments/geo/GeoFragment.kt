@@ -1,9 +1,9 @@
 package com.ponomarenko.qrreader.details.fragments.geo
 
+import android.app.Fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,11 +53,11 @@ class GeoFragment : Fragment(), GeoView {
     }
 
     override fun shareContent(content: String) {
-        with(Intent()) {
+        startActivity(Intent.createChooser(with(Intent()) {
             action = Intent.ACTION_SEND
             type = getString(R.string.share_type)
             putExtra(Intent.EXTRA_TEXT, content)
-        }.let { startActivity(Intent.createChooser(it, getString(R.string.share_title))) }
+        }, getString(R.string.share_title)))
     }
 
     override fun setData(content: String?) {
